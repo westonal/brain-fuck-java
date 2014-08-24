@@ -29,4 +29,8 @@ public final class TapePointer {
 		return bfTape.getAt(position) == 0;
 	}
 
+	public char asAscii() {
+		return (char) bfTape.getAt(position);
+	}
+
 }

@@ -20,6 +20,9 @@ public final class BrainFuck {
 		while (!progPointer.atEnd()) {
 			char c = progPointer.get();
 			switch (c) {
+			case '.':
+				System.out.print((char) pointer.asAscii());
+				break;
 			case '+':
 				pointer.incValue();
 				break;
