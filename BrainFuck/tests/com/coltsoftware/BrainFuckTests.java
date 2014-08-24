@@ -117,4 +117,38 @@ public class BrainFuckTests {
 		execute("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.");
 	}
 
+	@Test
+	public void alan() {
+		execute("++++[>" +
+				"++++[>" +
+				"++[>" +
+				"++[>" +
+				"+" +
+				">+" +
+				">+" + 
+				">+<<<" + 
+				"<-]"+
+				">>+>+>+<<<<" +
+				"<-]" +
+				">>>+>>+<<<<<" +
+				"<-]" +
+				"<-]" +
+				">>>>+.>----.>+.>--.");
+		//System.out.print(tape.toString());
+		assertEquals(65, tape.getAt(4));
+		assertEquals(108, tape.getAt(5));
+		assertEquals(97, tape.getAt(6));
+		assertEquals(110, tape.getAt(7));
+	}
+	
+	@Test
+	public void alan_one_line() {
+		execute("++++[>++++[>++[>++[>+>+>+>+<<<<-]>>+>+>+<<<<<-]>>>+>>+<<<<<<-]<-]>>>>+.>----.>+.>--.");
+		//System.out.print(tape.toString());
+		assertEquals(65, tape.getAt(4));
+		assertEquals(108, tape.getAt(5));
+		assertEquals(97, tape.getAt(6));
+		assertEquals(110, tape.getAt(7));
+	}
+
 }

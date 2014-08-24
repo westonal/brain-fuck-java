@@ -24,4 +24,12 @@ public final class Tape {
 		tapeContents[position]--;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (byte b : tapeContents)
+			sb.append(" " + b);
+		return sb.toString();
+	}
+
 }
