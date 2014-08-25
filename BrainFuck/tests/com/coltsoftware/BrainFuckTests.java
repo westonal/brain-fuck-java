@@ -176,4 +176,21 @@ public class BrainFuckTests {
 		assertEquals(2, tape.getAt(0));
 	}
 
+	@Test
+	public void single_step_execute_loops() {
+		BrainFuck brainFuck = new BrainFuck(pointer, "++[-]+");
+		for (int i = 0; i < 8; i++)
+			assertTrue(brainFuck.executeSingleStep());
+		assertEquals(1, tape.getAt(0));
+		assertFalse(brainFuck.executeSingleStep());
+	}
+	
+	@Test
+	public void single_step_execute_loops_2() {
+		BrainFuck brainFuck = new BrainFuck(pointer, "[-]+");
+		for (int i = 0; i < 2; i++)
+			assertTrue(brainFuck.executeSingleStep());
+		assertEquals(1, tape.getAt(0));
+		assertFalse(brainFuck.executeSingleStep());
+	}
 }
