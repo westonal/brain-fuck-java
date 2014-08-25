@@ -53,8 +53,9 @@ public class BrainFuckJoustTests {
 
 	@Test
 	public void two() {
-		executeSteps("(>+>-)*4>+(>[-][.])*21", 100);
+		executeSteps("(>->->+)*3([-]>)*11", 1000);
 		// assertEquals(1, tape.getAt(0));
+		assertEquals("", tape.toString());
 		System.out.print(tape.toString());
 	}
 
