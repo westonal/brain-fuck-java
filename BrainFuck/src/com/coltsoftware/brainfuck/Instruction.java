@@ -33,4 +33,31 @@ public final class Instruction {
 	public int getProgramStringOffset() {
 		return programStringOffset;
 	}
+
+	public void execute(TapePointer pointer, ProgramPointer progPointer) {
+		switch (instructionChar) {
+		case '.':
+			System.out.print((char) pointer.asAscii());
+			break;
+		case '+':
+			pointer.incValue();
+			break;
+		case '-':
+			pointer.decValue();
+			break;
+		case '>':
+			pointer.inc();
+			break;
+		case '<':
+			pointer.dec();
+			break;
+		case '[':
+			if (pointer.isZero())
+				progPointer.jumpToAfter(matchingBracket);
+			break;
+		case ']':
+			if (!pointer.isZero())
+				progPointer.jumpToAfter(matchingBracket);
+		}
+	}
 }

@@ -18,35 +18,8 @@ public final class BrainFuck {
 	public boolean executeSingleStep() {
 		if (progPointer.atEnd())
 			return false;
-		exectuteInstruction(progPointer.getInstructionAndMovePointer());
+		Instruction instruction = progPointer.getInstructionAndMovePointer();
+		instruction.execute(pointer, progPointer);
 		return true;
-	}
-
-	private void exectuteInstruction(Instruction instruction) {
-		char c = instruction.getInstructionChar();
-		switch (c) {
-		case '.':
-			System.out.print((char) pointer.asAscii());
-			break;
-		case '+':
-			pointer.incValue();
-			break;
-		case '-':
-			pointer.decValue();
-			break;
-		case '>':
-			pointer.inc();
-			break;
-		case '<':
-			pointer.dec();
-			break;
-		case '[':
-			if (pointer.isZero())
-				progPointer.jumpToAfter(instruction.getMatchingBracket());
-			break;
-		case ']':
-			if (!pointer.isZero())
-				progPointer.jumpToAfter(instruction.getMatchingBracket());
-		}
 	}
 }
