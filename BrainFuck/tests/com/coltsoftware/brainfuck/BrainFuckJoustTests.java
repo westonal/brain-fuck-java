@@ -18,7 +18,7 @@ public class BrainFuckJoustTests {
 
 	@Before
 	public void setup() {
-		setupGame(20);
+		setupGame(30);
 		pointer = new StandardTapePointer(tape);
 		pointerreversed = ReverseTapePointer.reverse(tape);
 	}
@@ -57,6 +57,37 @@ public class BrainFuckJoustTests {
 		// assertEquals(1, tape.getAt(0));
 		assertEquals("", tape.toString());
 		System.out.print(tape.toString());
+	}
+
+	@Test
+	public void pit() {
+		String program1 = "(>+>-)*4>+(>[-][.])*21";
+		String program2 = "(>)*19(>[-])*11";
+		BrainFuck engine1 = new BrainFuck(pointer, program1);
+		BrainFuck engine2 = new BrainFuck(pointerreversed, program2);
+		int zeroCount1 = 0;
+		int zeroCount2 = 0;
+		for (int i = 0; i < 10000; i++) {
+			engine1.executeSingleStep();
+			engine2.executeSingleStep();
+			if (tape.getAt(0) == 0)
+				zeroCount1++;
+			else
+				zeroCount1 = 0;
+			if (tape.getAt(tape.length() - 1) == 0)
+				zeroCount2++;
+			else
+				zeroCount2 = 0;
+			if (zeroCount1 == 2) {
+				System.out.print("Player 1 dead");
+				break;
+			}
+			if (zeroCount2 == 2) {
+				System.out.print("Player 2 dead");
+				break;
+			}
+		}
+		System.out.print("End");
 	}
 
 }
