@@ -5,8 +5,8 @@ public final class TapePointer {
 	private final Tape bfTape;
 	private int position;
 
-	public TapePointer(Tape bfTape) {
-		this.bfTape = bfTape;
+	public TapePointer(Tape tape) {
+		this.bfTape = tape;
 	}
 
 	public void incValue() {

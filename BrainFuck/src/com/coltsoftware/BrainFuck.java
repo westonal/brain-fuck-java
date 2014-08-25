@@ -1,22 +1,20 @@
 package com.coltsoftware;
 
+import java.util.Stack;
+
 public final class BrainFuck {
 
-	private TapePointer pointer;
+	private final TapePointer pointer;
+	private final String execString;
 
-	private String execString;
-
-	public BrainFuck(String execString) {
+	public BrainFuck(TapePointer pointer, String execString) {
+		this.pointer = pointer;
 		this.execString = execString;
 	}
 
-	public void execute(Tape tape) {
-		pointer = new TapePointer(tape);
-		execute(execString);
-	}
-
-	private void execute(String partString) {
-		ProgramPointer progPointer = new ProgramPointer(partString);
+	public void execute() {
+		ProgramPointer progPointer = new ProgramPointer(execString);
+		Stack<Integer> progPointerStack = new Stack<Integer>();
 		while (!progPointer.atEnd()) {
 			char c = progPointer.get();
 			switch (c) {
@@ -36,15 +34,23 @@ public final class BrainFuck {
 				pointer.dec();
 				break;
 			case '[':
-				int position = progPointer.getPosition();
-				int end = findEndPosition(partString, position);
-				String loop = partString.substring(position, end);
-				while (!pointer.isZero())
-					execute(loop);
-				progPointer.setPosition(end + 1);
+				if (pointer.isZero()) {
+					int end = findEndPosition(execString,
+							progPointer.getPosition());
+					progPointer.setPosition(end + 1);
+				} else {
+					progPointerStack.add(progPointer.getPosition());
+				}
 				break;
 			case ']':
-				throw new MismatchedBracketsException();
+				if (progPointerStack.isEmpty())
+					throw new MismatchedBracketsException();
+				if (pointer.isZero()) {
+					progPointerStack.pop();
+				} else {
+					int pos = progPointerStack.peek();
+					progPointer.setPosition(pos);
+				}
 			}
 		}
 	}

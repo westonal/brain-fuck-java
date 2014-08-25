@@ -3,8 +3,8 @@ package com.coltsoftware;
 public class Main {
 
 	public static void main(String[] args) {
-		out("Enter Brain Fuck:");		
-		BrainFuck brainFuck = new BrainFuck(args[0]);
+		out("Enter Brain Fuck:");
+		new BrainFuck(new TapePointer(new Tape(20)), args[0]).execute();
 	}
 
 	private static void out(String string) {

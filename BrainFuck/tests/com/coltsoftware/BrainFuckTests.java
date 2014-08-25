@@ -8,10 +8,12 @@ import org.junit.Test;
 public class BrainFuckTests {
 
 	private Tape tape;
+	private TapePointer pointer;
 
 	@Before
 	public void setup() {
 		tape = new Tape(20);
+		pointer = new TapePointer(tape);
 	}
 
 	@Test
@@ -21,8 +23,7 @@ public class BrainFuckTests {
 	}
 
 	private void execute(String execString) {
-		BrainFuck brainFuck = new BrainFuck(execString);
-		brainFuck.execute(tape);
+		new BrainFuck(pointer, execString).execute();
 	}
 
 	@Test
@@ -90,16 +91,11 @@ public class BrainFuckTests {
 		assertEquals(2, tape.getAt(1));
 		assertEquals(2, tape.getAt(2));
 		assertEquals(0, tape.getAt(3));
-		execute("[[-]>]");
+		execute("<<[[-]>]");
 		assertEquals(0, tape.getAt(0));
 		assertEquals(0, tape.getAt(1));
 		assertEquals(0, tape.getAt(2));
 		assertEquals(0, tape.getAt(3));
-	}
-
-	@Test(expected = MismatchedBracketsException.class)
-	public void mismatch() {
-		execute("++[-");
 	}
 
 	@Test(expected = MismatchedBracketsException.class)
@@ -119,36 +115,38 @@ public class BrainFuckTests {
 
 	@Test
 	public void alan() {
-		execute("++++[>" +
-				"++++[>" +
-				"++[>" +
-				"++[>" +
-				"+" +
-				">+" +
-				">+" + 
-				">+<<<" + 
-				"<-]"+
-				">>+>+>+<<<<" +
-				"<-]" +
-				">>>+>>+<<<<<" +
-				"<-]" +
-				"<-]" +
-				">>>>+.>----.>+.>--.");
-		//System.out.print(tape.toString());
+		execute("++++[>" + "++++[>" + "++[>" + "++[>" + "+" + ">+" + ">+"
+				+ ">+<<<" + "<-]" + ">>+>+>+<<<<" + "<-]" + ">>>+>>+<<<<<"
+				+ "<-]" + "<-]" + ">>>>+.>----.>+.>--.");
+		// System.out.print(tape.toString());
 		assertEquals(65, tape.getAt(4));
 		assertEquals(108, tape.getAt(5));
 		assertEquals(97, tape.getAt(6));
 		assertEquals(110, tape.getAt(7));
 	}
-	
+
 	@Test
 	public void alan_one_line() {
 		execute("++++[>++++[>++[>++[>+>+>+>+<<<<-]>>+>+>+<<<<<-]>>>+>>+<<<<<<-]<-]>>>>+.>----.>+.>--.");
-		//System.out.print(tape.toString());
+		// System.out.print(tape.toString());
 		assertEquals(65, tape.getAt(4));
 		assertEquals(108, tape.getAt(5));
 		assertEquals(97, tape.getAt(6));
 		assertEquals(110, tape.getAt(7));
+	}
+
+	@Test
+	public void sequential_execute() {
+		execute("++");
+		execute("-");
+		assertEquals(1, tape.getAt(0));
+	}
+
+	@Test
+	public void sequential_execute_maintains_position() {
+		execute(">++");
+		execute("-");
+		assertEquals(1, tape.getAt(1));
 	}
 
 }
