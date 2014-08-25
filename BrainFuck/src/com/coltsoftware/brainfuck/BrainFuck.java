@@ -15,6 +15,12 @@ public final class BrainFuck {
 			;
 	}
 
+	public void execute(int stepCount) {
+		for (int step = 0; step < stepCount; step++)
+			if (!executeSingleStep())
+				break;
+	}
+
 	public boolean executeSingleStep() {
 		if (progPointer.atEnd())
 			return false;
@@ -22,4 +28,5 @@ public final class BrainFuck {
 		instruction.execute(pointer, progPointer);
 		return true;
 	}
+
 }

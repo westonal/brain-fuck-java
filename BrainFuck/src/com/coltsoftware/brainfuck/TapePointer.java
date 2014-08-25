@@ -1,36 +1,25 @@
 package com.coltsoftware.brainfuck;
 
-public final class TapePointer {
+public abstract class TapePointer {
 
-	private final Tape bfTape;
-	private int position;
+	public abstract void incValue();
 
-	public TapePointer(Tape tape) {
-		this.bfTape = tape;
+	public abstract void decValue();
+
+	public abstract void inc();
+
+	public abstract void dec();
+
+	public abstract boolean isZero();
+
+	public abstract char asAscii();
+
+	public static TapePointer newForTape(Tape tape) {
+		return new StandardTapePointer(tape);
 	}
 
-	public void incValue() {
-		bfTape.incAtPosition(position);
-	}
-
-	public void decValue() {
-		bfTape.decAtPosition(position);
-	}
-
-	public void inc() {
-		position++;
-	}
-
-	public void dec() {
-		position--;
-	}
-
-	public boolean isZero() {
-		return bfTape.getAt(position) == 0;
-	}
-
-	public char asAscii() {
-		return (char) bfTape.getAt(position);
+	public static TapePointer reverseForTape(Tape tape) {
+		return ReverseTapePointer.reverse(tape);
 	}
 
 }

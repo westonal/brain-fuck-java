@@ -17,7 +17,7 @@ public class BrainFuckTests {
 	@Before
 	public void setup() {
 		tape = new Tape(20);
-		pointer = new TapePointer(tape);
+		pointer = TapePointer.newForTape(tape);
 	}
 
 	@Test

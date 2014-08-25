@@ -32,4 +32,8 @@ public final class Tape {
 		return sb.toString();
 	}
 
+	public int length() {
+		return tapeContents.length;
+	}
+
 }

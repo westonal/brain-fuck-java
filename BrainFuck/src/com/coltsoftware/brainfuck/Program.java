@@ -13,6 +13,9 @@ public final class Program implements Iterable<Instruction> {
 	}
 
 	public static Program compile(String string) {
+
+		string = new PreProcessor(string).getResult();
+
 		ArrayList<Instruction> instructions = new ArrayList<Instruction>();
 		char[] charArray = string.toCharArray();
 		int programOffset = 0;
