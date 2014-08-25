@@ -1,9 +1,13 @@
-package com.coltsoftware;
+package com.coltsoftware.brainfuck;
 
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import com.coltsoftware.brainfuck.BrainFuck;
+import com.coltsoftware.brainfuck.Tape;
+import com.coltsoftware.brainfuck.TapePointer;
 
 public class BrainFuckTests {
 
@@ -184,7 +188,7 @@ public class BrainFuckTests {
 		assertEquals(1, tape.getAt(0));
 		assertFalse(brainFuck.executeSingleStep());
 	}
-	
+
 	@Test
 	public void single_step_execute_loops_2() {
 		BrainFuck brainFuck = new BrainFuck(pointer, "[-]+");
@@ -192,5 +196,14 @@ public class BrainFuckTests {
 			assertTrue(brainFuck.executeSingleStep());
 		assertEquals(1, tape.getAt(0));
 		assertFalse(brainFuck.executeSingleStep());
+	}
+
+	@Test
+	public void infinite_loop_timing() {
+		BrainFuck brainFuck = new BrainFuck(pointer, "+[]");
+		for (int i = 0; i < 10000; i++)
+			brainFuck.executeSingleStep();
+		assertEquals(1, tape.getAt(0));
+		assertTrue(brainFuck.executeSingleStep());
 	}
 }

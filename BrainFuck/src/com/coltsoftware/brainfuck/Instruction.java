@@ -1,4 +1,4 @@
-package com.coltsoftware;
+package com.coltsoftware.brainfuck;
 
 public final class Instruction {
 

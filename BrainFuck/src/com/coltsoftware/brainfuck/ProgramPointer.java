@@ -1,4 +1,4 @@
-package com.coltsoftware;
+package com.coltsoftware.brainfuck;
 
 public final class ProgramPointer {
 
@@ -13,7 +13,7 @@ public final class ProgramPointer {
 		return pointer >= program.length();
 	}
 
-	public Instruction get() {
+	public Instruction getInstructionAndMovePointer() {
 		return program.instructionAt(pointer++);
 	}
 
@@ -21,8 +21,12 @@ public final class ProgramPointer {
 		return pointer;
 	}
 
-	public void setPosition(int postion) {
+	public void jumpTo(int postion) {
 		pointer = postion;
+	}
+
+	public void jumpToAfter(Instruction instruction) {
+		jumpTo(instruction.getProgramOffset() + 1);
 	}
 
 }

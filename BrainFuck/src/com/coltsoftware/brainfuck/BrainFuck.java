@@ -1,4 +1,4 @@
-package com.coltsoftware;
+package com.coltsoftware.brainfuck;
 
 import java.util.Stack;
 
@@ -21,7 +21,11 @@ public final class BrainFuck {
 	public boolean executeSingleStep() {
 		if (progPointer.atEnd())
 			return false;
-		Instruction instruction = progPointer.get();
+		exectuteInstruction(progPointer.getInstructionAndMovePointer());
+		return true;
+	}
+
+	private void exectuteInstruction(Instruction instruction) {
 		char c = instruction.getInstructionChar();
 		switch (c) {
 		case '.':
@@ -41,8 +45,7 @@ public final class BrainFuck {
 			break;
 		case '[':
 			if (pointer.isZero()) {
-				int end = instruction.getClose().getProgramOffset();
-				progPointer.setPosition(end + 1);
+				progPointer.jumpToAfter(instruction.getClose());
 			} else {
 				progPointerStack.add(progPointer.getPosition());
 			}
@@ -54,9 +57,8 @@ public final class BrainFuck {
 				progPointerStack.pop();
 			} else {
 				int pos = progPointerStack.peek();
-				progPointer.setPosition(pos);
+				progPointer.jumpTo(pos);
 			}
 		}
-		return true;
 	}
 }

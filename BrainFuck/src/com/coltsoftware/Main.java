@@ -1,5 +1,9 @@
 package com.coltsoftware;
 
+import com.coltsoftware.brainfuck.BrainFuck;
+import com.coltsoftware.brainfuck.Tape;
+import com.coltsoftware.brainfuck.TapePointer;
+
 public class Main {
 
 	public static void main(String[] args) {
