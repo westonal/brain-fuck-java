@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
 
-
 public final class Program implements Iterable<Instruction> {
 
 	private final ArrayList<Instruction> instructions;
@@ -38,15 +37,18 @@ public final class Program implements Iterable<Instruction> {
 			if (i.getInstructionChar() == ']') {
 				if (opens.isEmpty())
 					throw new MismatchedBracketsException();
-				Instruction open = opens.pop();
-				i.setOpen(open);
-				open.setClose(i);
+				associateBrackets(opens.pop(), i);
 			}
 		}
 		if (!opens.isEmpty())
 			throw new MismatchedBracketsException();
 
 		return new Program(instructions);
+	}
+
+	private static void associateBrackets(Instruction open, Instruction close) {
+		open.setMatchingBracket(close);
+		close.setMatchingBracket(open);
 	}
 
 	@Override

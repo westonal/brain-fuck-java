@@ -1,11 +1,8 @@
 package com.coltsoftware.brainfuck;
 
-import java.util.Stack;
-
 public final class BrainFuck {
 
 	private final TapePointer pointer;
-	private final Stack<Integer> progPointerStack = new Stack<Integer>();
 	private final ProgramPointer progPointer;
 
 	public BrainFuck(TapePointer pointer, String execString) {
@@ -44,21 +41,12 @@ public final class BrainFuck {
 			pointer.dec();
 			break;
 		case '[':
-			if (pointer.isZero()) {
-				progPointer.jumpToAfter(instruction.getClose());
-			} else {
-				progPointerStack.add(progPointer.getPosition());
-			}
+			if (pointer.isZero())
+				progPointer.jumpToAfter(instruction.getMatchingBracket());
 			break;
 		case ']':
-			if (progPointerStack.isEmpty())
-				throw new MismatchedBracketsException();
-			if (pointer.isZero()) {
-				progPointerStack.pop();
-			} else {
-				int pos = progPointerStack.peek();
-				progPointer.jumpTo(pos);
-			}
+			if (!pointer.isZero())
+				progPointer.jumpToAfter(instruction.getMatchingBracket());
 		}
 	}
 }
