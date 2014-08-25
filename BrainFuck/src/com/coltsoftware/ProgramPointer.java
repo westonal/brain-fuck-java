@@ -1,20 +1,20 @@
 package com.coltsoftware;
 
-public class ProgramPointer {
+public final class ProgramPointer {
 
-	private String execString;
 	private int pointer;
+	private Program program;
 
-	public ProgramPointer(String execString) {
-		this.execString = execString;
+	public ProgramPointer(Program program) {
+		this.program = program;
 	}
 
 	public boolean atEnd() {
-		return pointer >= execString.length();
+		return pointer >= program.length();
 	}
 
-	public char get() {
-		return execString.charAt(pointer++);
+	public Instruction get() {
+		return program.instructionAt(pointer++);
 	}
 
 	public int getPosition() {

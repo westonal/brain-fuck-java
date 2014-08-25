@@ -149,4 +149,31 @@ public class BrainFuckTests {
 		assertEquals(1, tape.getAt(1));
 	}
 
+	@Test
+	public void single_step_execute() {
+		BrainFuck brainFuck = new BrainFuck(pointer, "++>+");
+		brainFuck.executeSingleStep();
+		assertEquals(1, tape.getAt(0));
+		assertEquals(0, tape.getAt(1));
+		brainFuck.executeSingleStep();
+		assertEquals(2, tape.getAt(0));
+		assertEquals(0, tape.getAt(1));
+		brainFuck.executeSingleStep();
+		assertEquals(2, tape.getAt(0));
+		assertEquals(0, tape.getAt(1));
+		brainFuck.executeSingleStep();
+		assertEquals(2, tape.getAt(0));
+		assertEquals(1, tape.getAt(1));
+		assertFalse(brainFuck.executeSingleStep());
+	}
+
+	@Test
+	public void single_step_execute_comments() {
+		BrainFuck brainFuck = new BrainFuck(pointer, " + ingored +");
+		brainFuck.executeSingleStep();
+		assertEquals(1, tape.getAt(0));
+		brainFuck.executeSingleStep();
+		assertEquals(2, tape.getAt(0));
+	}
+
 }
