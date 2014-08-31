@@ -17,7 +17,15 @@ public final class Arena {
 		private int tapeLength = 10;
 
 		public Builder programStrings(String program1, String program2) {
+			return program1String(program1).program2String(program2);
+		}
+
+		public Builder program1String(String program1) {
 			this.program1 = Program.compile(program1);
+			return this;
+		}
+
+		public Builder program2String(String program2) {
 			this.program2 = Program.compile(program2);
 			return this;
 		}

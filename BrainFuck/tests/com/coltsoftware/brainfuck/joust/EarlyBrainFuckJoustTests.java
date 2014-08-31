@@ -53,19 +53,11 @@ public class EarlyBrainFuckJoustTests extends JoustTestsBase{
 		System.out.print(tape.toString());
 	}
 
-	@Test
-	public void two() {
-		executeSteps("(>->->+)*3([-]>)*11", 1000);
-		// assertEquals(1, tape.getAt(0));
-		assertEquals("", tape.toString());
-		System.out.print(tape.toString());
-	}
-
 	private final static String ALTERNATOR = "(>+>-)*4>+(>[-][.])*21";
 	private final static String DECOYBOT = ">(+)*10>(-)*10(>+>-)*3(>[-].)*21";
 	private final static String COUNTERPUNCH = "+>(-)*12(>)*7(<(-)*12<(+)*12)*3(>)*7(([-([(-)*6[+].])*5])*4>)*21";
 
-	private final static String MY_V2 = "(>-)*9(+[-]>)*20";
+	private final static String MY_V2 = "(>-)*8>(+[-]>)*20";
 
 	@Test
 	public void pit_against_alternator() {
@@ -73,7 +65,7 @@ public class EarlyBrainFuckJoustTests extends JoustTestsBase{
 		// String program2 = "(>)*19(>[-][.])*11";
 		String program2 = "(>)*9(+[-]>)*20";
 		int score = pitPrograms(program1, program2);
-		assertEquals(1, score);
+		assertEquals(15, score);
 		System.out.print("End");
 	}
 
@@ -82,7 +74,7 @@ public class EarlyBrainFuckJoustTests extends JoustTestsBase{
 		String program1 = ALTERNATOR;
 		String program2 = MY_V2;
 		int score = pitPrograms(program1, program2);
-		assertEquals(1, score);
+		assertEquals(-14, score);
 		System.out.print("End");
 	}
 
@@ -99,7 +91,7 @@ public class EarlyBrainFuckJoustTests extends JoustTestsBase{
 		String program1 = DECOYBOT;
 		String program2 = MY_V2;
 		int score = pitPrograms(program1, program2);
-		assertEquals(1, score);
+		assertEquals(-17, score);
 		System.out.print("End");
 	}
 	
@@ -108,7 +100,7 @@ public class EarlyBrainFuckJoustTests extends JoustTestsBase{
 		String program1 = COUNTERPUNCH;
 		String program2 = MY_V2;
 		int score = pitPrograms(program1, program2);
-		assertEquals(1, score);
+		assertEquals(19, score);
 		System.out.print("End");
 	}
 
