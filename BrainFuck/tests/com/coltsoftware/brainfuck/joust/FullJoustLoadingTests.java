@@ -8,6 +8,9 @@ import java.net.URISyntaxException;
 
 import org.junit.Test;
 
+import com.coltsoftware.brainfuck.PreProcessor;
+import com.coltsoftware.brainfuck.Program;
+
 public class FullJoustLoadingTests extends JoustTestsBase {
 
 	@Test
@@ -29,5 +32,14 @@ public class FullJoustLoadingTests extends JoustTestsBase {
 	public void can_open_all_bots() {
 		for (String bot : listBots())
 			assertNotNull(loadBotString(bot));
+	}
+
+	@Test
+	public void can_preprocess_all_bots() {
+		for (String bot : listBots()) {
+			System.out.print(bot);
+			System.out.print("\n");
+			assertNotNull(new PreProcessor(loadBotString(bot)).getResult());
+		}
 	}
 }

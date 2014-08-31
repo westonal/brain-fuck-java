@@ -8,9 +8,16 @@ public final class PreProcessor {
 
 	public PreProcessor(String string) {
 		this.string = string;
-		while (this.string.contains("(") || this.string.contains(")")
-				|| this.string.contains("*"))
-			this.string = process();
+		while (containsFirst10K('(') || containsFirst10K(')')
+				|| containsFirst10K('*')) {
+			String newString = process();
+			this.string = newString;
+		}
+	}
+
+	private boolean containsFirst10K(char c) {
+		int indexOf = this.string.indexOf(c);
+		return indexOf >= 0 && indexOf <= 10000;
 	}
 
 	public String getResult() {
@@ -57,6 +64,8 @@ public final class PreProcessor {
 				break;
 			}
 			i++;
+			if (i > 10000)
+				break;
 		}
 
 		i = 0;
