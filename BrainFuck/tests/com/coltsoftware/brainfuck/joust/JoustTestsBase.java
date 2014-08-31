@@ -2,6 +2,7 @@ package com.coltsoftware.brainfuck.joust;
 
 import org.junit.Before;
 
+import com.coltsoftware.brainfuck.joust.Arena.AllLengthScore;
 import com.coltsoftware.brainfuck.joust.Arena.Builder;
 
 public abstract class JoustTestsBase extends BotLoadingBase {
@@ -18,7 +19,11 @@ public abstract class JoustTestsBase extends BotLoadingBase {
 	}
 
 	protected int pitPrograms(String program1, String program2) {
-		return builder.programStrings(program1, program2).allLengthScore().basicScore();
+		return pitProgramsFull(program1, program2).basicScore();
+	}
+
+	protected AllLengthScore pitProgramsFull(String program1, String program2) {
+		return builder.programStrings(program1, program2).allLengthScore();
 	}
 
 	protected int joust(String program1, String program2) {

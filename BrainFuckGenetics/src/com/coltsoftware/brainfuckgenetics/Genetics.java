@@ -35,8 +35,6 @@ public final class Genetics {
 			setCurrentGeneration(next);
 			generationNumber++;
 		}
-
-		// new Arena.Builder().
 	}
 
 	private void out(String string) {
@@ -60,7 +58,7 @@ public final class Genetics {
 	}
 
 	private String grow(String source) {
-		int bitsToInsert = rand.nextInt(5);
+		int bitsToInsert = rand.nextInt(9) + 1;
 		StringBuilder sb = new StringBuilder(source);
 		for (int i = 1; i < bitsToInsert; i++)
 			sb.insert(rand.nextInt(sb.length()), randomCharater());
@@ -77,11 +75,30 @@ public final class Genetics {
 	}
 
 	private String mutate(String source) {
+		if (rand.nextInt(20) == 0) {
+			return mutateAddLoop(source);
+		}
+
 		int bitsToMutate = rand.nextInt(5);
 		char[] charArray = source.toCharArray();
 		for (int i = 1; i < bitsToMutate; i++)
 			charArray[rand.nextInt(charArray.length)] = randomCharater();
 		return new String(charArray);
+	}
+
+	private String mutateAddLoop(String source) {
+		if (rand.nextInt(20) == 0) {
+			return mutateAddLoop(source);
+		}
+		StringBuilder sb = new StringBuilder(source);
+		sb.insert(rand.nextInt(source.length() - 1), getRandomLoop());
+		return sb.toString();
+	}
+
+	private String[] allLoops = new String[] { "[-]", "[+]" };
+
+	private String getRandomLoop() {
+		return allLoops[rand.nextInt(allLoops.length)];
 	}
 
 	private void setCurrentGeneration(Generation generation) {

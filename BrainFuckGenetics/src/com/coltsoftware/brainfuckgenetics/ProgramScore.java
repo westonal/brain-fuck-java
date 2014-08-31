@@ -1,17 +1,18 @@
 package com.coltsoftware.brainfuckgenetics;
 
 import com.coltsoftware.brainfuck.Program;
+import com.coltsoftware.brainfuck.joust.Arena.AllLengthScore;
 
-public class ProgramScore {
+public final class ProgramScore {
 	private final Program program;
-	private final int score;
+	private final AllLengthScore score;
 
-	public ProgramScore(Program program, int score) {
+	public ProgramScore(Program program, AllLengthScore score) {
 		this.program = program;
 		this.score = score;
 	}
 
-	public int getScore() {
+	public AllLengthScore getScore() {
 		return score;
 	}
 

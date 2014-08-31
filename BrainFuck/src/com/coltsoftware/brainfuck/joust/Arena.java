@@ -7,6 +7,7 @@ import com.coltsoftware.brainfuck.StandardTapePointer;
 import com.coltsoftware.brainfuck.Tape;
 import com.coltsoftware.brainfuck.TapeException;
 import com.coltsoftware.brainfuck.TapePointer;
+import com.coltsoftware.brainfuck.joust.Arena.AllLengthScore;
 
 public final class Arena {
 
@@ -112,6 +113,21 @@ public final class Arena {
 
 		public int basicScore() {
 			return lengthsWon - lengthsLost;
+		}
+
+		public void combine(AllLengthScore other) {
+			lengthsWon += other.lengthsWon;
+			lengthsLost += other.lengthsLost;
+			lengthsDrawn += other.lengthsDrawn;
+			wonMoves += other.wonMoves;
+			lostMoves += other.lostMoves;
+			drawnMoves += other.drawnMoves;
+		}
+
+		@Override
+		public String toString() {
+			return String
+					.format("%d/%d %d", lengthsWon, lengthsLost, lostMoves);
 		}
 
 	}
