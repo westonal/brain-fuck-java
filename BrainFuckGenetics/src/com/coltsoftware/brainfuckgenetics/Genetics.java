@@ -84,29 +84,45 @@ public final class Genetics {
 
 	private Generation createNextGeneration(List<ProgramScore> scoreGeneration) {
 		Generation generation = new Generation();
-		while (generation.size() < 40 && !scoreGeneration.isEmpty()) {
+		while (generation.size() < 20 && !scoreGeneration.isEmpty()) {
 			ProgramScore topScore = scoreGeneration.remove(0);
 			generation.add(topScore);
 
 			String source = topScore.getProgram().source();
 			addCheckingHistory(generation, mutate(source));
-			addCheckingHistory(generation, grow(source));
-			addCheckingHistory(
-					generation,
-					breed(source,
-							scoreGeneration
-									.get(rand.nextInt(scoreGeneration.size()))
-									.getProgram().source()));
+			addCheckingHistory(generation, mutate(source));
+			addCheckingHistory(generation, mutate(source));
+			addCheckingHistory(generation, grow(source, 1));
+			addCheckingHistory(generation, grow(source, 1));
+			addCheckingHistory(generation, grow(source, 2));
+			addCheckingHistory(generation, shrinkRandom(source, 1));
+			addCheckingHistory(generation, shrinkRandom(source, 2));
+			// addCheckingHistory(
+			// generation,
+			// breed(source,
+			// scoreGeneration
+			// .get(rand.nextInt(scoreGeneration.size()))
+			// .getProgram().source()));
 		}
 		return generation;
+	}
+
+	private String shrinkRandom(String source, int bitsToRemove) {
+		StringBuilder sb = new StringBuilder(source);
+		for (int i = 1; i < bitsToRemove; i++)
+			sb.deleteCharAt(rand.nextInt(sb.length()));
+		return sb.toString();
+	}
+
+	private String shrink(String source, int n) {
+		return source.substring(n);
 	}
 
 	private void addCheckingHistory(Generation generation, String source) {
 		generation.add(source);
 	}
 
-	private String grow(String source) {
-		int bitsToInsert = rand.nextInt(9) + 1;
+	private String grow(String source, int bitsToInsert) {
 		StringBuilder sb = new StringBuilder(source);
 		for (int i = 1; i < bitsToInsert; i++)
 			sb.insert(rand.nextInt(sb.length()), randomCharater());
@@ -123,7 +139,7 @@ public final class Genetics {
 	}
 
 	private String mutate(String source) {
-		if (rand.nextInt(20) == 0) {
+		if (rand.nextInt(10) == 0) {
 			return mutateAddLoop(source);
 		}
 
