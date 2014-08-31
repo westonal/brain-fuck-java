@@ -53,8 +53,8 @@ public final class Arena {
 				Arena arena = tapeLength(i).build();
 				score += arena.joust(10000).getWinner();
 				Tape tape = arena.getTape();
-				System.out.print(tape.toString());
-				System.out.print("\n");
+				out(tape.toString());
+				out("\n");
 			}
 			return score;
 		}
@@ -107,17 +107,17 @@ public final class Arena {
 			try {
 				engine1.executeSingleStep();
 			} catch (TapeException ex) {
-				System.out.print("Prog 1 end of tape:\n");
+				out("Prog 1 end of tape:\n");
 				out1 = true;
 			}
 			try {
 				engine2.executeSingleStep();
 			} catch (TapeException ex) {
-				System.out.print("Prog 2 end of tape:\n");
+				out("Prog 2 end of tape:\n");
 				out2 = true;
 			}
 			if (out1 && out2) {
-				System.out.print("Draw both out:\n");
+				out("Draw both out:\n");
 				return new JoustResult(0, i);
 			}
 			if (out1) {
@@ -135,20 +135,24 @@ public final class Arena {
 			else
 				zeroCount2 = 0;
 			if (zeroCount1 == 2 && zeroCount2 == 2) {
-				System.out.print("Draw by death:\n");
+				out("Draw by death:\n");
 				return new JoustResult(0, i);
 			}
 			if (zeroCount1 == 2) {
-				System.out.print("Prog 2 clasic win:\n");
+				out("Prog 2 clasic win:\n");
 				return new JoustResult(-1, i);
 			}
 			if (zeroCount2 == 2) {
-				System.out.print("Prog 1 clasic win:\n");
+				out("Prog 1 clasic win:\n");
 				return new JoustResult(1, i);
 			}
 		}
-		System.out.print("Draw:\n");
+		out("Draw:\n");
 		return new JoustResult(0, moves);
+	}
+
+	private static void out(String string) {
+		// System.out.print(string);
 	}
 
 	public Tape getTape() {

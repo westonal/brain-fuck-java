@@ -37,7 +37,7 @@ public final class Instruction {
 	public void execute(TapePointer pointer, ProgramPointer progPointer) {
 		switch (instructionChar) {
 		case '.':
-			System.out.print((char) pointer.asAscii());
+			//System.out.print((char) pointer.asAscii());
 			break;
 		case '+':
 			pointer.incValue();
