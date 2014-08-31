@@ -16,6 +16,7 @@ public final class Genetics {
 	private final Random rand;
 	private Generation generation;
 	private final List<Program> theEnvironment;
+	private final AttemptCache cache = new AttemptCache();
 
 	public Genetics(List<Program> theEnvironment) {
 		this.theEnvironment = theEnvironment;
@@ -40,10 +41,17 @@ public final class Genetics {
 			if (generationNumber % 100 == 0)
 				saveGeneration(scoreGeneration, generationNumber);
 
+			writeToCache(scoreGeneration);
+
 			Generation next = createNextGeneration(scoreGeneration);
 			setCurrentGeneration(next);
 			generationNumber++;
 		}
+	}
+
+	private void writeToCache(List<ProgramScore> scoreGeneration) {
+		for (ProgramScore score : scoreGeneration)
+			cache.saveScore(score);
 	}
 
 	private static void saveGeneration(List<ProgramScore> scoreGeneration,
@@ -86,15 +94,25 @@ public final class Genetics {
 		Generation generation = new Generation();
 		while (generation.size() < 40 && !scoreGeneration.isEmpty()) {
 			ProgramScore topScore = scoreGeneration.remove(0);
+			generation.add(topScore);
+
 			String source = topScore.getProgram().source();
-			generation.add(source);
-			generation.add(mutate(source));
-			generation.add(grow(source));
-			generation.add(breed(source,
-					scoreGeneration.get(rand.nextInt(scoreGeneration.size()))
-							.getProgram().source()));
+			addCheckingHistory(generation, mutate(source));
+			addCheckingHistory(generation, grow(source));
+			addCheckingHistory(
+					generation,
+					breed(source,
+							scoreGeneration
+									.get(rand.nextInt(scoreGeneration.size()))
+									.getProgram().source()));
 		}
 		return generation;
+	}
+
+	private void addCheckingHistory(Generation generation, String source) {
+		if (cache.previousScore(source) != null)
+			return;
+		generation.add(source);
 	}
 
 	private String grow(String source) {

@@ -24,6 +24,8 @@ public class Generation {
 
 	private final int MAX_PROG_LENGTH = 2048;
 
+	private final ArrayList<ProgramScore> existingGoodScores = new ArrayList<ProgramScore>();
+
 	public void add(String program) {
 		int length = program.length();
 		if (length == 0)
@@ -87,6 +89,8 @@ public class Generation {
 		}
 
 		List<ProgramScore> progScores = assignScores(genPrograms, scores);
+		progScores.addAll(existingGoodScores);
+		sortByScores(progScores);
 
 		for (ProgramScore score : progScores) {
 			String source = score.getProgram().source();
@@ -110,7 +114,6 @@ public class Generation {
 		for (int j = 0; j < scores.length; j++) {
 			progScores.add(new ProgramScore(genPrograms.get(j), scores[j]));
 		}
-		sortByScores(progScores);
 		return progScores;
 	}
 
@@ -152,6 +155,10 @@ public class Generation {
 
 	public int size() {
 		return programs.size();
+	}
+
+	public void add(ProgramScore score) {
+		existingGoodScores.add(score);
 	}
 
 }
