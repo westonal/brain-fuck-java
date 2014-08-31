@@ -8,6 +8,7 @@ import com.coltsoftware.brainfuck.BrainFuck;
 import com.coltsoftware.brainfuck.ReverseTapePointer;
 import com.coltsoftware.brainfuck.StandardTapePointer;
 import com.coltsoftware.brainfuck.Tape;
+import com.coltsoftware.brainfuck.TapeException;
 import com.coltsoftware.brainfuck.TapePointer;
 
 public abstract class JoustTestsBase extends BotLoadingBase {
@@ -46,23 +47,35 @@ public abstract class JoustTestsBase extends BotLoadingBase {
 		}
 		return score;
 	}
-	
+
 	protected int joust(String program1, String program2) {
 		BrainFuck engine1 = new BrainFuck(pointer, program1);
 		BrainFuck engine2 = new BrainFuck(pointerreversed, program2);
 		int zeroCount1 = 0;
 		int zeroCount2 = 0;
 		for (int i = 0; i < 10000; i++) {
+			boolean out1 = false;
+			boolean out2 = false;
 			try {
 				engine1.executeSingleStep();
-			} catch (Exception ex) {
+			} catch (TapeException ex) {
 				System.out.print("Prog 1 end of tape:\n");
-				return -1;
+				out1 = true;
 			}
 			try {
 				engine2.executeSingleStep();
-			} catch (Exception ex) {
+			} catch (TapeException ex) {
 				System.out.print("Prog 2 end of tape:\n");
+				out2 = true;
+			}
+			if (out1 && out2) {
+				System.out.print("Draw both out:\n");
+				return 0;
+			}
+			if (out1) {
+				return -1;
+			}
+			if (out2) {
 				return 1;
 			}
 			if (tape.getAt(0) == 0)
