@@ -206,4 +206,14 @@ public class BrainFuckTests {
 		assertEquals(1, tape.getAt(0));
 		assertTrue(brainFuck.executeSingleStep());
 	}
+
+	@Test(expected = TapeException.class)
+	public void throws_exception_outside_of_tape_under() {
+		new BrainFuck(pointer, "<").executeSingleStep();
+	}
+
+	@Test(expected = TapeException.class)
+	public void throws_exception_outside_of_tape_over() {
+		new BrainFuck(pointer, "(>)*20").execute();
+	}
 }

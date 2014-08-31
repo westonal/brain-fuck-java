@@ -24,10 +24,14 @@ public final class StandardTapePointer extends TapePointer {
 
 	public void inc() {
 		position++;
+		if (position >= tape.length())
+			throw new TapeException();
 	}
 
 	public void dec() {
 		position--;
+		if (position < 0)
+			throw new TapeException();
 	}
 
 	public boolean isZero() {
@@ -36,10 +40,6 @@ public final class StandardTapePointer extends TapePointer {
 
 	public char asAscii() {
 		return (char) tape.getAt(position);
-	}
-
-	public static StandardTapePointer reverse(Tape tape) {
-		return null;
 	}
 
 }
