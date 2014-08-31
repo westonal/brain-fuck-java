@@ -40,7 +40,8 @@ public final class Genetics {
 			if (generationNumber % 100 == 0)
 				saveGeneration(scoreGeneration, generationNumber);
 
-			Generation next = createNextGeneration(scoreGeneration);
+			Generation next = createNextGeneration(scoreGeneration,
+					Math.min(2048, 2 * generationNumber + 10));
 			setCurrentGeneration(next);
 			generationNumber++;
 		}
@@ -82,8 +83,9 @@ public final class Genetics {
 		System.out.print("\n");
 	}
 
-	private Generation createNextGeneration(List<ProgramScore> scoreGeneration) {
-		Generation generation = new Generation();
+	private Generation createNextGeneration(List<ProgramScore> scoreGeneration,
+			int maxLength) {
+		Generation generation = new Generation(maxLength);
 		while (generation.size() < 20 && !scoreGeneration.isEmpty()) {
 			ProgramScore topScore = scoreGeneration.remove(0);
 			generation.add(topScore);
@@ -182,7 +184,7 @@ public final class Genetics {
 	}
 
 	private Generation createFirstGeneration() {
-		Generation generation = new Generation();
+		Generation generation = new Generation(10);
 		for (int i = 0; i < 40; i++) {
 			int length = 10;
 			generation.add(generateRandom(length));

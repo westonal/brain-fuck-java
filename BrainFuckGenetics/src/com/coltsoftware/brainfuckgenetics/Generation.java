@@ -22,7 +22,11 @@ public class Generation {
 	private final static ExecutorService executor = Executors
 			.newFixedThreadPool(2);
 
-	private final int MAX_PROG_LENGTH = 512;
+	private final int maxLength;
+
+	public Generation(int maxLength) {
+		this.maxLength = maxLength;
+	}
 
 	private final ArrayList<ProgramScore> existingGoodScores = new ArrayList<ProgramScore>();
 
@@ -30,8 +34,8 @@ public class Generation {
 		int length = program.length();
 		if (length == 0)
 			return;
-		if (length > MAX_PROG_LENGTH)
-			programs.add(program.substring(0, MAX_PROG_LENGTH));
+		if (length > maxLength)
+			programs.add(program.substring(0, maxLength));
 		else
 			programs.add(program);
 	}
