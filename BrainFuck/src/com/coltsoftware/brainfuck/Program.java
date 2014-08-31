@@ -14,8 +14,16 @@ public final class Program implements Iterable<Instruction> {
 		this.source = source;
 	}
 
-	public static Program compile(final String source) {
+	public static Program compileOptomized(String source) {
+		return compile(Optomizer.optomize(source), source);
+	}
 
+	public static Program compile(final String source) {
+		return compile(source, source);
+	}
+
+	private static Program compile(final String source,
+			final String sourceToShow) {
 		String processedSource = new PreProcessor(source).getResult();
 
 		ArrayList<Instruction> instructions = new ArrayList<Instruction>();
@@ -48,7 +56,7 @@ public final class Program implements Iterable<Instruction> {
 		if (!opens.isEmpty())
 			throw new MismatchedBracketsException();
 
-		return new Program(instructions, source);
+		return new Program(instructions, sourceToShow);
 	}
 
 	private static void associateBrackets(Instruction open, Instruction close) {

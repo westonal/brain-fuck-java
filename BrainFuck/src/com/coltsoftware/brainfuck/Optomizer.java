@@ -5,7 +5,7 @@ public final class Optomizer {
 	private Optomizer() {
 	}
 
-	public static String optomise(String string) {
+	public static String optomize(String string) {
 		while (true) {
 			String string2 = string.replace("+-", "").replace("-+", "")
 					.replace("><", "").replace("<>", "");

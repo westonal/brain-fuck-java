@@ -46,9 +46,9 @@ public final class Genetics {
 
 	private Generation createNextGeneration(List<ProgramScore> scoreGeneration) {
 		Generation generation = new Generation();
-		for (int i = 0; i < scoreGeneration.size() / 4; i++) {
-			ProgramScore programScore = scoreGeneration.get(i);
-			String source = programScore.getProgram().source();
+		while (generation.size() < 40 && !scoreGeneration.isEmpty()) {
+			ProgramScore topScore = scoreGeneration.remove(0);
+			String source = topScore.getProgram().source();
 			generation.add(source);
 			generation.add(mutate(source));
 			generation.add(grow(source));
@@ -68,8 +68,10 @@ public final class Genetics {
 	}
 
 	private String breed(String source1, String source2) {
-		int placeToChop1 = rand.nextInt(source1.length() - 1) + 1;
-		int placeToChop2 = rand.nextInt(source2.length() - 1) + 1;
+		if (source2.length() == 0)
+			throw new RuntimeException();
+		int placeToChop1 = rand.nextInt(source1.length()) + 1;
+		int placeToChop2 = rand.nextInt(source2.length() - 1);
 		return source1.substring(0, placeToChop1)
 				+ source2.substring(placeToChop2);
 	}

@@ -3,16 +3,18 @@ package com.coltsoftware.brainfuckgenetics;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 
-import com.coltsoftware.brainfuck.Optomizer;
 import com.coltsoftware.brainfuck.Program;
 import com.coltsoftware.brainfuck.joust.Arena;
 
 public class Generation {
-	private final ArrayList<String> programs = new ArrayList<String>();
+	private final HashSet<String> programs = new HashSet<String>();
 
 	public void add(String program) {
+		if (program.length() == 0)
+			return;
 		programs.add(program);
 	}
 
@@ -27,8 +29,7 @@ public class Generation {
 		ArrayList<Program> compiledPrograms = new ArrayList<Program>();
 		for (String programSource : programs) {
 			try {
-				Program program = Program.compile(Optomizer
-						.optomise(programSource));
+				Program program = Program.compileOptomized(programSource);
 				compiledPrograms.add(program);
 			} catch (Exception ex) {
 				System.out.print("Failed to compile source " + programSource);

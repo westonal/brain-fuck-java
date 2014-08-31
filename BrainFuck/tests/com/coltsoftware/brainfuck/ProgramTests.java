@@ -21,7 +21,16 @@ public final class ProgramTests {
 		assertCanGetSource("(>)*9");
 	}
 
+	@Test
+	public void get_back_source_before_optomizing() {
+		assertCanGetSourceOptomized("><");
+	}
+
 	private void assertCanGetSource(String source) {
 		assertEquals(source, Program.compile(source).source());
+	}
+
+	private void assertCanGetSourceOptomized(String source) {
+		assertEquals(source, Program.compileOptomized(source).source());
 	}
 }
