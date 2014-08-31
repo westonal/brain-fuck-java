@@ -2,7 +2,6 @@ package com.coltsoftware.brainfuck.joust;
 
 import org.junit.Before;
 
-import com.coltsoftware.brainfuck.Tape;
 import com.coltsoftware.brainfuck.joust.Arena.Builder;
 
 public abstract class JoustTestsBase extends BotLoadingBase {
@@ -19,16 +18,7 @@ public abstract class JoustTestsBase extends BotLoadingBase {
 	}
 
 	protected int pitPrograms(String program1, String program2) {
-		int score = 0;
-		builder.programStrings(program1, program2);
-		for (int i = 10; i <= 30; i++) {
-			Arena arena = builder.tapeLength(i).build();
-			score += arena.joust(10000).getWinner();
-			Tape tape = arena.getTape();
-			System.out.print(tape.toString());
-			System.out.print("\n");
-		}
-		return score;
+		return builder.programStrings(program1, program2).allLengthScore();
 	}
 
 	protected int joust(String program1, String program2) {

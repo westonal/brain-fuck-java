@@ -14,7 +14,7 @@ public final class Arena {
 
 		private Program program1;
 		private Program program2;
-		private int tapeLength = 10;;
+		private int tapeLength = 10;
 
 		public Builder programStrings(String program1, String program2) {
 			this.program1 = Program.compile(program1);
@@ -29,6 +29,18 @@ public final class Arena {
 
 		public Arena build() {
 			return new Arena(tapeLength, program1, program2);
+		}
+
+		public int allLengthScore() {
+			int score = 0;
+			for (int i = 10; i <= 30; i++) {
+				Arena arena = tapeLength(i).build();
+				score += arena.joust(10000).getWinner();
+				Tape tape = arena.getTape();
+				System.out.print(tape.toString());
+				System.out.print("\n");
+			}
+			return score;
 		}
 	}
 
