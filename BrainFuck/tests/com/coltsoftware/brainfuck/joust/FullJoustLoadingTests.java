@@ -42,4 +42,13 @@ public class FullJoustLoadingTests extends JoustTestsBase {
 			assertNotNull(new PreProcessor(loadBotString(bot)).getResult());
 		}
 	}
+
+	@Test
+	public void can_compile_all_bots() {
+		for (String bot : listBots()) {
+			System.out.print(bot);
+			System.out.print("\n");
+			assertNotNull(Program.compile(loadBotString(bot)));
+		}
+	}
 }
