@@ -7,17 +7,19 @@ import java.util.Stack;
 public final class Program implements Iterable<Instruction> {
 
 	private final ArrayList<Instruction> instructions;
+	private final String source;
 
-	private Program(ArrayList<Instruction> instructions) {
+	private Program(ArrayList<Instruction> instructions, String source) {
 		this.instructions = instructions;
+		this.source = source;
 	}
 
-	public static Program compile(String string) {
+	public static Program compile(final String source) {
 
-		string = new PreProcessor(string).getResult();
+		String processedSource = new PreProcessor(source).getResult();
 
 		ArrayList<Instruction> instructions = new ArrayList<Instruction>();
-		char[] charArray = string.toCharArray();
+		char[] charArray = processedSource.toCharArray();
 		int programOffset = 0;
 		for (int i = 0; i < charArray.length; i++) {
 			char c = charArray[i];
@@ -46,7 +48,7 @@ public final class Program implements Iterable<Instruction> {
 		if (!opens.isEmpty())
 			throw new MismatchedBracketsException();
 
-		return new Program(instructions);
+		return new Program(instructions, source);
 	}
 
 	private static void associateBrackets(Instruction open, Instruction close) {
@@ -66,4 +68,9 @@ public final class Program implements Iterable<Instruction> {
 	public int length() {
 		return instructions.size();
 	}
+
+	public String source() {
+		return source;
+	}
+
 }
