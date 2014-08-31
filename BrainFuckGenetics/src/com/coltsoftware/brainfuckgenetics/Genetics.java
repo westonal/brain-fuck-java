@@ -24,15 +24,55 @@ public final class Genetics {
 		Generation firstGeneration = createFirstGeneration();
 		setCurrentGeneration(firstGeneration);
 
-		long time = System.currentTimeMillis();
+		int generationNumber = 0;
 
-		generation.scoreGeneration(theEnvironment);
+		while (true) {
+			out(String.format("Generation %d", generationNumber));
+			long time = System.currentTimeMillis();
+			List<ProgramScore> scoreGeneration = generation
+					.scoreGeneration(theEnvironment);
+			out(String.format("Generation %d took %d ms", generationNumber,
+					System.currentTimeMillis() - time));
 
-		System.out.print(String.format("Generation %d took %d ms", 0,
-				System.currentTimeMillis() - time));
-		System.out.print("\n");
+			Generation next = createNextGeneration(scoreGeneration);
+			setCurrentGeneration(next);
+			generationNumber++;
+		}
 
 		// new Arena.Builder().
+	}
+
+	private void out(String string) {
+		System.out.print(string);
+		System.out.print("\n");
+	}
+
+	private Generation createNextGeneration(List<ProgramScore> scoreGeneration) {
+		Generation generation = new Generation();
+		for (int i = 0; i < scoreGeneration.size() / 3; i++) {
+			ProgramScore programScore = scoreGeneration.get(i);
+			String source = programScore.getProgram().source();
+			generation.add(source);
+			generation.add(mutate(source));
+			generation.add(breed(source,
+					scoreGeneration.get(rand.nextInt(scoreGeneration.size()))
+							.getProgram().source()));
+		}
+		return generation;
+	}
+
+	private String breed(String source1, String source2) {
+		int placeToChop = rand.nextInt(source1.length() - 2) + 1;
+		return source1.substring(0, placeToChop)
+				+ source2.substring(placeToChop);
+	}
+
+	private String mutate(String source) {
+		int bitsToMutate = rand.nextInt(5);
+		char[] charArray = source.toCharArray();
+		for (int i = 1; i < bitsToMutate; i++)
+			charArray[rand.nextInt(charArray.length)] = randomCharater();
+		return new String(charArray);
 	}
 
 	private void setCurrentGeneration(Generation generation) {
@@ -42,7 +82,7 @@ public final class Genetics {
 
 	private Generation createFirstGeneration() {
 		Generation generation = new Generation();
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 30; i++) {
 			int length = 10;
 			generation.add(generateRandom(length));
 		}
