@@ -41,7 +41,7 @@ public final class Genetics {
 				saveGeneration(scoreGeneration, generationNumber);
 
 			Generation next = createNextGeneration(scoreGeneration,
-					Math.min(2048, 2 * generationNumber + 10));
+					Math.min(2048, 256 * (generationNumber / 8000 + 1)));
 			setCurrentGeneration(next);
 			generationNumber++;
 		}
