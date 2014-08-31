@@ -1,8 +1,10 @@
 package com.coltsoftware.brainfuck.joust;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -33,7 +35,12 @@ public class BotLoadingBase {
 	protected static String loadBotString(String botName) {
 		String assetName = "bots/" + botName;
 		InputStream stream = loadAssetStream(assetName);
-		String botString = convertStreamToString(stream);
+		String botString;
+		try {
+			botString = fromStream(stream);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 		return botString;
 	}
 
@@ -44,14 +51,15 @@ public class BotLoadingBase {
 		return stream;
 	}
 
-	static String convertStreamToString(java.io.InputStream is) {
-		java.util.Scanner scanner = new java.util.Scanner(is);
-		java.util.Scanner s = scanner;
-		try {
-			return s.hasNext() ? s.next() : "";
-		} finally {
-			scanner.close();
+	private static String fromStream(InputStream in) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+		StringBuilder out = new StringBuilder();
+		String newLine = System.getProperty("line.separator");
+		String line;
+		while ((line = reader.readLine()) != null) {
+			out.append(line);
+			out.append(newLine);
 		}
+		return out.toString();
 	}
-
 }
