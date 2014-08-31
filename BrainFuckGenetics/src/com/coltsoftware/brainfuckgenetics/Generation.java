@@ -20,7 +20,7 @@ public class Generation {
 	private final HashSet<String> programs = new HashSet<String>();
 
 	private final static ExecutorService executor = Executors
-			.newFixedThreadPool(8);
+			.newFixedThreadPool(2);
 
 	private final int MAX_PROG_LENGTH = 2048;
 

@@ -37,7 +37,7 @@ public final class Genetics {
 					.scoreGeneration(theEnvironment);
 			out(String.format("Generation %d took %d ms", generationNumber,
 					System.currentTimeMillis() - time));
-			if (generationNumber % 5 == 0)
+			if (generationNumber % 100 == 0)
 				saveGeneration(scoreGeneration, generationNumber);
 
 			Generation next = createNextGeneration(scoreGeneration);
