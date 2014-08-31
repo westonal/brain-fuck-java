@@ -1,18 +1,17 @@
 package com.coltsoftware.brainfuckgenetics;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
+import java.util.HashSet;
 
 public final class AttemptCache {
 
-	private final Dictionary<String, ProgramScore> attempts = new Hashtable<String, ProgramScore>();
+	private final HashSet<String> attempts = new HashSet<String>();
 
-	public ProgramScore previousScore(String program) {
-		return attempts.get(program);
+	public String previousScore(String program) {
+		return attempts.contains(program) ? "" : null;
 	}
 
 	public void saveScore(ProgramScore score) {
-		attempts.put(score.getProgram().source(), score);
+		attempts.add(score.getProgram().source());
 	}
 
 }
