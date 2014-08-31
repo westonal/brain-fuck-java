@@ -1,13 +1,9 @@
 package com.coltsoftware.brainfuckgenetics;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
 import com.coltsoftware.brainfuck.Program;
-import com.coltsoftware.brainfuck.joust.Arena;
 
 public final class Genetics {
 
@@ -27,7 +23,8 @@ public final class Genetics {
 		int generationNumber = 0;
 
 		while (true) {
-			out(String.format("Generation %d (%d)", generationNumber, generation.size()));
+			out(String.format("Generation %d (%d)", generationNumber,
+					generation.size()));
 			long time = System.currentTimeMillis();
 			List<ProgramScore> scoreGeneration = generation
 					.scoreGeneration(theEnvironment);
@@ -87,7 +84,6 @@ public final class Genetics {
 
 	private void setCurrentGeneration(Generation generation) {
 		this.generation = generation;
-		generation.printToScreen();
 	}
 
 	private Generation createFirstGeneration() {

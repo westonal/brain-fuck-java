@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.coltsoftware.brainfuck.Optomizer;
 import com.coltsoftware.brainfuck.Program;
 import com.coltsoftware.brainfuck.joust.Arena;
 
@@ -26,7 +27,8 @@ public class Generation {
 		ArrayList<Program> compiledPrograms = new ArrayList<Program>();
 		for (String programSource : programs) {
 			try {
-				Program program = Program.compile(programSource);
+				Program program = Program.compile(Optomizer
+						.optomise(programSource));
 				compiledPrograms.add(program);
 			} catch (Exception ex) {
 				System.out.print("Failed to compile source " + programSource);
