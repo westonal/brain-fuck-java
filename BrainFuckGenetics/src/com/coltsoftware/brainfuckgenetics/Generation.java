@@ -154,7 +154,7 @@ public class Generation {
 	}
 
 	public int size() {
-		return programs.size();
+		return programs.size() + existingGoodScores.size();
 	}
 
 	public void add(ProgramScore score) {
