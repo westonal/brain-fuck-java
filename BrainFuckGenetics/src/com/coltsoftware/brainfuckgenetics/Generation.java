@@ -92,20 +92,23 @@ public class Generation {
 		progScores.addAll(existingGoodScores);
 		sortByScores(progScores);
 
-		for (ProgramScore score : progScores) {
-			String source = score.getProgram().source();
-			int length = source.length();
-			if (length > 50) {
-				System.out.print(String.format(
-						"%s is the score for prog with leng %s\n",
-						score.getScore(), length));
-			} else {
-				System.out.print(String.format("%s is the score for prog %s\n",
-						score.getScore(), source));
-			}
-		}
+		printScores(progScores);
 
 		return progScores;
+	}
+
+	private void printScores(List<ProgramScore> progScores) {
+		ProgramScore score = progScores.get(0);
+		String source = score.getProgram().source();
+		int length = source.length();
+		if (length > 50) {
+			System.out.print(String.format(
+					"%s is the score for prog with leng %s\n",
+					score.getScore(), length));
+		} else {
+			System.out.print(String.format("%s is the score for prog %s\n",
+					score.getScore(), source));
+		}
 	}
 
 	private static List<ProgramScore> assignScores(List<Program> genPrograms,
