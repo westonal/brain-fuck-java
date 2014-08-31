@@ -47,17 +47,73 @@ public final class Arena {
 			return new Arena(tapeLength, program1, program2);
 		}
 
-		public int allLengthScore() {
-			int score = 0;
+		public AllLengthScore allLengthScore() {
+			AllLengthScore score = new AllLengthScore();
 			for (int i = 10; i <= 30; i++) {
 				Arena arena = tapeLength(i).build();
-				score += arena.joust(10000).getWinner();
+				JoustResult joust = arena.joust(10000);
+				score.add(joust);
 				Tape tape = arena.getTape();
 				out(tape.toString());
 				out("\n");
 			}
 			return score;
 		}
+	}
+
+	public static class AllLengthScore {
+		private int lengthsWon;
+		private int lengthsLost;
+		private int lengthsDrawn;
+		private int wonMoves;
+		private int lostMoves;
+		private int drawnMoves;
+
+		public void add(JoustResult joust) {
+			switch (joust.winner) {
+			case 1:
+				lengthsWon++;
+				wonMoves += joust.moves;
+				break;
+			case -1:
+				lengthsLost++;
+				lostMoves += joust.moves;
+				break;
+			default:
+				lengthsDrawn++;
+				drawnMoves += joust.moves;
+				break;
+			}
+		}
+
+		public int getLengthsWon() {
+			return lengthsWon;
+		}
+
+		public int getLengthsLost() {
+			return lengthsLost;
+		}
+
+		public int getLengthsDrawn() {
+			return lengthsDrawn;
+		}
+
+		public int getWonMoves() {
+			return wonMoves;
+		}
+
+		public int getLostMoves() {
+			return lostMoves;
+		}
+
+		public int getDrawnMoves() {
+			return drawnMoves;
+		}
+
+		public int basicScore() {
+			return lengthsWon - lengthsLost;
+		}
+
 	}
 
 	public class JoustResult {
