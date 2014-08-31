@@ -139,8 +139,20 @@ public final class Genetics {
 
 		int bitsToMutate = rand.nextInt(5);
 		char[] charArray = source.toCharArray();
-		for (int i = 1; i < bitsToMutate; i++)
-			charArray[rand.nextInt(charArray.length)] = randomCharater();
+		for (int i = 1; i < bitsToMutate; i++) {
+			int toReplace2 = -1;
+			int toReplace = rand.nextInt(charArray.length);
+			char c = charArray[toReplace];
+			if (c == '[') {
+				toReplace2 = source.indexOf(']', toReplace);
+			}
+			if (c == ']') {
+				toReplace2 = source.indexOf('[');
+			}
+			charArray[toReplace] = randomCharater();
+			if (toReplace2 != -1)
+				charArray[toReplace2] = randomCharater();
+		}
 		return new String(charArray);
 	}
 
