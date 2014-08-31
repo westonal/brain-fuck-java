@@ -21,12 +21,20 @@ public final class Arena {
 		}
 
 		public Builder program1String(String program1) {
-			this.program1 = Program.compile(program1);
-			return this;
+			return program1(Program.compile(program1));
 		}
 
 		public Builder program2String(String program2) {
-			this.program2 = Program.compile(program2);
+			return program2(Program.compile(program2));
+		}
+
+		public Builder program1(Program program1) {
+			this.program1 = program1;
+			return this;
+		}
+
+		public Builder program2(Program program2) {
+			this.program2 = program2;
 			return this;
 		}
 
