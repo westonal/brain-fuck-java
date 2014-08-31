@@ -13,7 +13,7 @@ import com.coltsoftware.brainfuck.joust.Arena.AllLengthScore;
 public class Generation {
 	private final HashSet<String> programs = new HashSet<String>();
 
-	private final int MAX_PROG_LENGTH = 1024;
+	private final int MAX_PROG_LENGTH = 2048;
 
 	public void add(String program) {
 		int length = program.length();

@@ -1,8 +1,14 @@
 package com.coltsoftware.brainfuckgenetics;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Random;
 
+import com.coltsoftware.brainfuck.Optomizer;
 import com.coltsoftware.brainfuck.Program;
 
 public final class Genetics {
@@ -17,6 +23,7 @@ public final class Genetics {
 	}
 
 	public void go() {
+		out("GO");
 		Generation firstGeneration = createFirstGeneration();
 		setCurrentGeneration(firstGeneration);
 
@@ -30,10 +37,43 @@ public final class Genetics {
 					.scoreGeneration(theEnvironment);
 			out(String.format("Generation %d took %d ms", generationNumber,
 					System.currentTimeMillis() - time));
+			if (generationNumber % 5 == 0)
+				saveGeneration(scoreGeneration, generationNumber);
 
 			Generation next = createNextGeneration(scoreGeneration);
 			setCurrentGeneration(next);
 			generationNumber++;
+		}
+	}
+
+	private static void saveGeneration(List<ProgramScore> scoreGeneration,
+			int generationNumber) {
+		try {
+			File logs = new File("logs");
+			if (!logs.exists())
+				logs.mkdir();
+			File outFile = new File(logs, String.format("Generation%d.txt",
+					generationNumber));
+			FileOutputStream fileOutputStream = new FileOutputStream(outFile,
+					false);
+			PrintStream printStream = new PrintStream(fileOutputStream, true,
+					"UTF-8");
+			printStream.format("Generation %d\n", generationNumber);
+			for (ProgramScore score : scoreGeneration) {
+				printStream.format("Score: %s\n", score.getScore());
+				printStream.format("RawCode:\n%s\n\n", score.getProgram()
+						.source());
+
+				printStream.format("TightCode:\n%s\n\n",
+						Optomizer.optomize(score.getProgram().source()));
+			}
+			printStream.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

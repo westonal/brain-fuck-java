@@ -126,8 +126,8 @@ public final class Arena {
 
 		@Override
 		public String toString() {
-			return String
-					.format("%d/%d %d", lengthsWon, lengthsLost, lostMoves);
+			return String.format("%d/%d/%d %d/%d/%d", lengthsWon, lengthsLost,
+					lengthsDrawn, wonMoves, lostMoves, drawnMoves);
 		}
 
 	}
