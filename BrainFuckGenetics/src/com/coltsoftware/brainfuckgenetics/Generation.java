@@ -147,6 +147,11 @@ public class Generation {
 				if (drawCompare != 0)
 					return drawCompare;
 
+				final int wonCompare = score1.getWonMoves()
+						- score2.getWonMoves();
+				if (wonCompare != 0)
+					return wonCompare;
+
 				return 0;
 			}
 		});
