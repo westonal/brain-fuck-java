@@ -5,6 +5,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 import com.coltsoftware.brainfuck.Program;
 import com.coltsoftware.brainfuck.joust.Arena;
@@ -12,6 +18,9 @@ import com.coltsoftware.brainfuck.joust.Arena.AllLengthScore;
 
 public class Generation {
 	private final HashSet<String> programs = new HashSet<String>();
+
+	private final static ExecutorService executor = Executors
+			.newFixedThreadPool(8);
 
 	private final int MAX_PROG_LENGTH = 2048;
 
@@ -47,14 +56,33 @@ public class Generation {
 		return compiledPrograms;
 	}
 
-	public List<ProgramScore> scoreGeneration(List<Program> theEnvironment) {
+	public List<ProgramScore> scoreGeneration(final List<Program> theEnvironment) {
 		List<Program> genPrograms = compileGeneration();
-		AllLengthScore[] scores = new AllLengthScore[genPrograms.size()];
-		for (int i = 0; i < genPrograms.size(); i++) {
-			scores[i] = new AllLengthScore();
-			Program p = genPrograms.get(i);
-			for (Program bot : theEnvironment) {
-				scores[i].combine(pit(p, bot));
+		int size = genPrograms.size();
+		AllLengthScore[] scores = new AllLengthScore[size];
+		ArrayList<Future<AllLengthScore>> futures = new ArrayList<Future<AllLengthScore>>(
+				size);
+		for (int i = 0; i < size; i++) {
+			final Program p = genPrograms.get(i);
+			FutureTask<AllLengthScore> f = new FutureTask<AllLengthScore>(
+					new Callable<AllLengthScore>() {
+						@Override
+						public AllLengthScore call() throws Exception {
+							AllLengthScore allLengthScore = new AllLengthScore();
+							for (Program bot : theEnvironment) {
+								allLengthScore.combine(pit(p, bot));
+							}
+							return allLengthScore;
+						}
+					});
+			futures.add(f);
+			executor.execute(f);
+		}
+		for (int i = 0; i < size; i++) {
+			try {
+				scores[i] = futures.get(i).get();
+			} catch (InterruptedException | ExecutionException e) {
+				throw new RuntimeException(e);
 			}
 		}
 
