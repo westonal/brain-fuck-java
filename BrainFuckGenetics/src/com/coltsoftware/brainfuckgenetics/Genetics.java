@@ -15,7 +15,6 @@ public final class Genetics {
 	}
 
 	public class Generation {
-
 		private final ArrayList<String> programs = new ArrayList<String>();
 
 		public void add(String program) {
@@ -28,13 +27,23 @@ public final class Genetics {
 				System.out.print("\n");
 			}
 		}
+
 	}
 
-	public void go() {		
+	public void go() {
 		Generation firstGeneration = createFirstGeneration();
 		setCurrentGeneration(firstGeneration);
-		
-		//new Arena.Builder().
+
+		scoreGeneration();
+
+		// new Arena.Builder().
+	}
+
+	private void scoreGeneration() {
+		for (String botName : AssetLoader.listBots()) {
+			System.out.print(botName);
+			System.out.print("\n");
+		}
 	}
 
 	private void setCurrentGeneration(Generation generation) {

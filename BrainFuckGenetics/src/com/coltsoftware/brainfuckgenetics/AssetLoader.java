@@ -1,4 +1,4 @@
-package com.coltsoftware.brainfuck.joust;
+package com.coltsoftware.brainfuckgenetics;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,9 +8,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
-public class BotLoadingBase {
+public final class AssetLoader {
 
-	protected static String[] listBots() {
+	private AssetLoader() {
+	}
+
+	public static String[] listBots() {
 		try {
 			ArrayList<String> result = new ArrayList<String>();
 			ClassLoader classLoader = Thread.currentThread()
@@ -30,7 +33,7 @@ public class BotLoadingBase {
 		}
 	}
 
-	protected static String loadBotString(String botName) {
+	public static String loadBotString(String botName) {
 		String assetName = "bots/" + botName;
 		InputStream stream = loadAssetStream(assetName);
 		String botString = convertStreamToString(stream);
@@ -53,5 +56,4 @@ public class BotLoadingBase {
 			scanner.close();
 		}
 	}
-
 }
