@@ -5,9 +5,13 @@ public final class BrainFuck {
 	private final TapePointer pointer;
 	private final ProgramPointer progPointer;
 
-	public BrainFuck(TapePointer pointer, String execString) {
+	public BrainFuck(TapePointer pointer, Program program) {
 		this.pointer = pointer;
-		progPointer = new ProgramPointer(Program.compile(execString));
+		progPointer = new ProgramPointer(program);
+	}
+
+	public BrainFuck(TapePointer pointer, String execString) {
+		this(pointer, Program.compile(execString));
 	}
 
 	public void execute() {
