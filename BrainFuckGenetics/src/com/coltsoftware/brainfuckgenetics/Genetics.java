@@ -1,6 +1,8 @@
 package com.coltsoftware.brainfuckgenetics;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -64,7 +66,25 @@ public final class Genetics {
 		// new Arena.Builder().
 	}
 
-	private void scoreGeneration() {
+	public static class ProgramScore {
+		private final Program program;
+		private final int score;
+
+		public ProgramScore(Program program, int score) {
+			this.program = program;
+			this.score = score;
+		}
+
+		public int getScore() {
+			return score;
+		}
+
+		public Program getProgram() {
+			return program;
+		}
+	}
+
+	private List<ProgramScore> scoreGeneration() {
 		List<Program> genPrograms = generation.compileGeneration();
 		int[] scores = new int[genPrograms.size()];
 		for (int i = 0; i < genPrograms.size(); i++) {
@@ -74,13 +94,32 @@ public final class Genetics {
 			}
 		}
 
-		for (int j = 0; j < scores.length; j++) {
-			int score = scores[j];
-			System.out.print(String.format("%d is the score for %s", score,
-					genPrograms.get(j)));
-			System.out.print("\n");
-		}
+		List<ProgramScore> progScores = assignScores(genPrograms, scores);
 
+		for (ProgramScore score : progScores)
+			System.out.print(String.format("%d is the score for %s\n",
+					score.getScore(), score.getProgram().source()));
+
+		return progScores;
+	}
+
+	private List<ProgramScore> assignScores(List<Program> genPrograms,
+			int[] scores) {
+		List<ProgramScore> progScores = new ArrayList<ProgramScore>();
+		for (int j = 0; j < scores.length; j++) {
+			progScores.add(new ProgramScore(genPrograms.get(j), scores[j]));
+		}
+		sortByScores(progScores);
+		return progScores;
+	}
+
+	private static void sortByScores(List<ProgramScore> progScores) {
+		Collections.sort(progScores, new Comparator<ProgramScore>() {
+			@Override
+			public int compare(ProgramScore o1, ProgramScore o2) {
+				return o2.score - o1.score;
+			}
+		});
 	}
 
 	private int pit(Program p, Program bot) {
@@ -103,7 +142,7 @@ public final class Genetics {
 
 	private String generateRandom(int length) {
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < length; i++) {
 			sb.append(randomCharater());
 		}
 		return sb.toString();
