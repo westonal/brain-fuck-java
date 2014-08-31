@@ -78,4 +78,8 @@ public class Generation {
 		return new Arena.Builder().program1(p).program2(bot).allLengthScore();
 	}
 
+	public int size() {
+		return programs.size();
+	}
+
 }

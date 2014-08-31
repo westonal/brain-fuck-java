@@ -27,7 +27,7 @@ public final class Genetics {
 		int generationNumber = 0;
 
 		while (true) {
-			out(String.format("Generation %d", generationNumber));
+			out(String.format("Generation %d (%d)", generationNumber, generation.size()));
 			long time = System.currentTimeMillis();
 			List<ProgramScore> scoreGeneration = generation
 					.scoreGeneration(theEnvironment);
@@ -49,11 +49,12 @@ public final class Genetics {
 
 	private Generation createNextGeneration(List<ProgramScore> scoreGeneration) {
 		Generation generation = new Generation();
-		for (int i = 0; i < scoreGeneration.size() / 3; i++) {
+		for (int i = 0; i < scoreGeneration.size() / 4; i++) {
 			ProgramScore programScore = scoreGeneration.get(i);
 			String source = programScore.getProgram().source();
 			generation.add(source);
 			generation.add(mutate(source));
+			generation.add(grow(source));
 			generation.add(breed(source,
 					scoreGeneration.get(rand.nextInt(scoreGeneration.size()))
 							.getProgram().source()));
@@ -61,10 +62,19 @@ public final class Genetics {
 		return generation;
 	}
 
+	private String grow(String source) {
+		int bitsToInsert = rand.nextInt(5);
+		StringBuilder sb = new StringBuilder(source);
+		for (int i = 1; i < bitsToInsert; i++)
+			sb.insert(rand.nextInt(sb.length()), randomCharater());
+		return sb.toString();
+	}
+
 	private String breed(String source1, String source2) {
-		int placeToChop = rand.nextInt(source1.length() - 2) + 1;
-		return source1.substring(0, placeToChop)
-				+ source2.substring(placeToChop);
+		int placeToChop1 = rand.nextInt(source1.length() - 1) + 1;
+		int placeToChop2 = rand.nextInt(source2.length() - 1) + 1;
+		return source1.substring(0, placeToChop1)
+				+ source2.substring(placeToChop2);
 	}
 
 	private String mutate(String source) {
@@ -82,7 +92,7 @@ public final class Genetics {
 
 	private Generation createFirstGeneration() {
 		Generation generation = new Generation();
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < 40; i++) {
 			int length = 10;
 			generation.add(generateRandom(length));
 		}
