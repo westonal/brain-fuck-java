@@ -97,12 +97,12 @@ public final class Genetics {
 			addCheckingHistory(generation, grow(source, 2));
 			addCheckingHistory(generation, shrinkRandom(source, 1));
 			addCheckingHistory(generation, shrinkRandom(source, 2));
-			// addCheckingHistory(
-			// generation,
-			// breed(source,
-			// scoreGeneration
-			// .get(rand.nextInt(scoreGeneration.size()))
-			// .getProgram().source()));
+			addCheckingHistory(
+					generation,
+					breed(source,
+							scoreGeneration
+									.get(rand.nextInt(scoreGeneration.size()))
+									.getProgram().source()));
 		}
 		return generation;
 	}

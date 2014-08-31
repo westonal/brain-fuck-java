@@ -22,7 +22,7 @@ public class Generation {
 	private final static ExecutorService executor = Executors
 			.newFixedThreadPool(2);
 
-	private final int MAX_PROG_LENGTH = 2048;
+	private final int MAX_PROG_LENGTH = 512;
 
 	private final ArrayList<ProgramScore> existingGoodScores = new ArrayList<ProgramScore>();
 
