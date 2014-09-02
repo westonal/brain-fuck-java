@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.coltsoftware.brainfuck.joust.Arena.AllLengthScore;
 import com.coltsoftware.brainfuck.joust.Arena.JoustResult;
 
 public final class ArenaTests {
@@ -52,5 +53,13 @@ public final class ArenaTests {
 		assertEquals(1, joust.getWinner());
 		assertEquals(3, joust.getP1HighInstruction().getProgramOffset());
 		assertEquals(6, joust.getP2HighInstruction().getProgramOffset());
+	}
+
+	@Test
+	public void high_water_all_length_test() {
+		AllLengthScore allLengthScore = new Arena.Builder().programStrings(
+				"+[.]", ">+[-]<<[.]").allLengthScore();
+		assertEquals(3, allLengthScore.getHighWater1().getProgramOffset());
+		assertEquals(6, allLengthScore.getHighWater2().getProgramOffset());
 	}
 }

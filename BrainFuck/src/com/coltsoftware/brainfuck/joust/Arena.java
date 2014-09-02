@@ -70,6 +70,8 @@ public final class Arena {
 		private int wonMoves;
 		private int lostMoves;
 		private int drawnMoves;
+		private Instruction highWater1;
+		private Instruction highWater2;
 
 		public void add(JoustResult joust) {
 			switch (joust.winner) {
@@ -86,6 +88,30 @@ public final class Arena {
 				drawnMoves += joust.moves;
 				break;
 			}
+			setPotentialHighWater1(joust.highInstruction1);
+			setPotentialHighWater2(joust.highInstruction2);
+		}
+
+		private void setPotentialHighWater1(Instruction highInstruction1) {
+			if (highWater1 == null
+					|| highInstruction1.getProgramOffset() > highWater1
+							.getProgramOffset())
+				highWater1 = highInstruction1;
+		}
+
+		private void setPotentialHighWater2(Instruction highInstruction2) {
+			if (highWater2 == null
+					|| highInstruction2.getProgramOffset() > highWater2
+							.getProgramOffset())
+				highWater2 = highInstruction2;
+		}
+
+		public Instruction getHighWater1() {
+			return highWater1;
+		}
+
+		public Instruction getHighWater2() {
+			return highWater2;
 		}
 
 		public int getLengthsWon() {
