@@ -1,6 +1,7 @@
 package com.coltsoftware.brainfuck.joust;
 
 import com.coltsoftware.brainfuck.BrainFuck;
+import com.coltsoftware.brainfuck.Instruction;
 import com.coltsoftware.brainfuck.Program;
 import com.coltsoftware.brainfuck.ReverseTapePointer;
 import com.coltsoftware.brainfuck.StandardTapePointer;
@@ -135,10 +136,15 @@ public final class Arena {
 	public class JoustResult {
 		private final int winner;
 		private final int moves;
+		private final Instruction highInstruction1;
+		private final Instruction highInstruction2;
 
-		private JoustResult(int winner, int moves) {
+		private JoustResult(int winner, int moves,
+				Instruction highInstruction1, Instruction highInstruction2) {
 			this.winner = winner;
 			this.moves = moves;
+			this.highInstruction1 = highInstruction1;
+			this.highInstruction2 = highInstruction2;
 		}
 
 		public int getWinner() {
@@ -147,6 +153,14 @@ public final class Arena {
 
 		public int getMoves() {
 			return moves;
+		}
+
+		public Instruction getP1HighInstruction() {
+			return highInstruction1;
+		}
+
+		public Instruction getP2HighInstruction() {
+			return highInstruction2;
 		}
 	}
 
@@ -190,13 +204,16 @@ public final class Arena {
 			}
 			if (out1 && out2) {
 				out("Draw both out:\n");
-				return new JoustResult(0, i);
+				return new JoustResult(0, i, engine1.getHighestInstruction(),
+						engine2.getHighestInstruction());
 			}
 			if (out1) {
-				return new JoustResult(-1, i);
+				return new JoustResult(-1, i, engine1.getHighestInstruction(),
+						engine2.getHighestInstruction());
 			}
 			if (out2) {
-				return new JoustResult(1, i);
+				return new JoustResult(1, i, engine1.getHighestInstruction(),
+						engine2.getHighestInstruction());
 			}
 			if (tape.getAt(0) == 0)
 				zeroCount1++;
@@ -208,19 +225,23 @@ public final class Arena {
 				zeroCount2 = 0;
 			if (zeroCount1 == 2 && zeroCount2 == 2) {
 				out("Draw by death:\n");
-				return new JoustResult(0, i);
+				return new JoustResult(0, i, engine1.getHighestInstruction(),
+						engine2.getHighestInstruction());
 			}
 			if (zeroCount1 == 2) {
 				out("Prog 2 clasic win:\n");
-				return new JoustResult(-1, i);
+				return new JoustResult(-1, i, engine1.getHighestInstruction(),
+						engine2.getHighestInstruction());
 			}
 			if (zeroCount2 == 2) {
 				out("Prog 1 clasic win:\n");
-				return new JoustResult(1, i);
+				return new JoustResult(1, i, engine1.getHighestInstruction(),
+						engine2.getHighestInstruction());
 			}
 		}
 		out("Draw:\n");
-		return new JoustResult(0, moves);
+		return new JoustResult(0, moves, engine1.getHighestInstruction(),
+				engine2.getHighestInstruction());
 	}
 
 	private static void out(String string) {

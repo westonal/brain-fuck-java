@@ -43,4 +43,14 @@ public final class ArenaTests {
 		assertEquals(0, joust.getWinner());
 		assertEquals(10, joust.getMoves());
 	}
+
+	@Test
+	public void high_water_test() {
+		Arena arena = new Arena.Builder().tapeLength(10)
+				.programStrings("+[.]", ">+[-]<<[.]").build();
+		JoustResult joust = arena.joust(10);
+		assertEquals(1, joust.getWinner());
+		assertEquals(3, joust.getP1HighInstruction().getProgramOffset());
+		assertEquals(6, joust.getP2HighInstruction().getProgramOffset());
+	}
 }
