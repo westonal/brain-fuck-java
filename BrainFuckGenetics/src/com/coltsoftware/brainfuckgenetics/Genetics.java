@@ -43,8 +43,7 @@ public final class Genetics {
 
 			writeToCache(scoreGeneration);
 
-			Generation next = createNextGeneration(scoreGeneration,
-					Math.min(2048, 256 * (generationNumber / 2000 + 1)));
+			Generation next = createNextGeneration(scoreGeneration, 2048);
 
 			setCurrentGeneration(next);
 			generationNumber++;
@@ -95,7 +94,7 @@ public final class Genetics {
 	private Generation createNextGeneration(List<ProgramScore> scoreGeneration,
 			int maxLength) {
 		Generation generation = new Generation(maxLength);
-		while (generation.size() < 20 && !scoreGeneration.isEmpty()) {
+		while (generation.size() < 40 && !scoreGeneration.isEmpty()) {
 			ProgramScore topScore = scoreGeneration.remove(0);
 			generation.add(topScore);
 
