@@ -31,8 +31,8 @@ public final class BrainFuck {
 		if (progPointer.atEnd())
 			return false;
 		Instruction instruction = progPointer.getInstructionAndMovePointer();
-		instruction.execute(pointer, progPointer);
 		setLastInstruction(instruction);
+		instruction.execute(pointer, progPointer);
 		return true;
 	}
 

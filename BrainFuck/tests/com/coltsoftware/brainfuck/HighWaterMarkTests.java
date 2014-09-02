@@ -71,4 +71,17 @@ public final class HighWaterMarkTests {
 		assertEquals(4, brainFuck.getHighestInstruction().getProgramOffset());
 		assertEquals(3, brainFuck.getLastInstruction().getProgramOffset());
 	}
+
+	@Test
+	public void high_water_and_last_on_exception() {
+		BrainFuck brainFuck = new BrainFuck(regPointer, "...<");
+		try {
+			brainFuck.execute();
+			fail();
+		} catch (TapeException e) {
+			assertEquals(3, brainFuck.getHighestInstruction()
+					.getProgramOffset());
+			assertEquals(3, brainFuck.getLastInstruction().getProgramOffset());
+		}
+	}
 }
