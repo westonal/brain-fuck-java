@@ -44,7 +44,7 @@ public final class Genetics {
 			writeToCache(scoreGeneration);
 
 			Generation next = createNextGeneration(scoreGeneration,
-					Math.min(2048, 256 * (generationNumber / 8000 + 1)));
+					Math.min(2048, 256 * (generationNumber / 2000 + 1)));
 
 			setCurrentGeneration(next);
 			generationNumber++;
@@ -100,6 +100,12 @@ public final class Genetics {
 			generation.add(topScore);
 
 			String source = topScore.getProgram().source();
+
+			int trimAt = topScore.getScore().getHighWater1()
+					.getProgramStringOffset();
+
+			source = source.substring(0, trimAt);
+
 			addCheckingHistory(generation, mutate(source));
 			addCheckingHistory(generation, mutate(source));
 			addCheckingHistory(generation, mutate(source));
@@ -108,12 +114,13 @@ public final class Genetics {
 			addCheckingHistory(generation, grow(source, 2));
 			addCheckingHistory(generation, shrinkRandom(source, 1));
 			addCheckingHistory(generation, shrinkRandom(source, 2));
-			addCheckingHistory(
-					generation,
-					breed(source,
-							scoreGeneration
-									.get(rand.nextInt(scoreGeneration.size()))
-									.getProgram().source()));
+			if (generation.size() > 0)
+				addCheckingHistory(
+						generation,
+						breed(source,
+								scoreGeneration
+										.get(rand.nextInt(scoreGeneration
+												.size())).getProgram().source()));
 		}
 		return generation;
 	}
