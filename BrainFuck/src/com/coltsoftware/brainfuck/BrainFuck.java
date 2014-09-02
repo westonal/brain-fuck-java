@@ -4,6 +4,8 @@ public final class BrainFuck {
 
 	private final TapePointer pointer;
 	private final ProgramPointer progPointer;
+	private Instruction lastInstruction;
+	private Instruction highestInstruction;
 
 	public BrainFuck(TapePointer pointer, Program program) {
 		this.pointer = pointer;
@@ -30,7 +32,24 @@ public final class BrainFuck {
 			return false;
 		Instruction instruction = progPointer.getInstructionAndMovePointer();
 		instruction.execute(pointer, progPointer);
+		setLastInstruction(instruction);
 		return true;
+	}
+
+	private void setLastInstruction(Instruction lastInstruction) {
+		this.lastInstruction = lastInstruction;
+		if (highestInstruction == null
+				|| lastInstruction.getProgramOffset() > highestInstruction
+						.getProgramOffset())
+			highestInstruction = lastInstruction;
+	}
+
+	public Instruction getHighestInstruction() {
+		return highestInstruction;
+	}
+
+	public Instruction getLastInstruction() {
+		return lastInstruction;
 	}
 
 }
