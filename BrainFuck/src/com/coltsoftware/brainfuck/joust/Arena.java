@@ -92,18 +92,22 @@ public final class Arena {
 			setPotentialHighWater2(joust.highInstruction2);
 		}
 
-		private void setPotentialHighWater1(Instruction highInstruction1) {
+		private void setPotentialHighWater1(Instruction highInstruction) {
+			if (highInstruction == null)
+				return;
 			if (highWater1 == null
-					|| highInstruction1.getProgramOffset() > highWater1
+					|| highInstruction.getProgramOffset() > highWater1
 							.getProgramOffset())
-				highWater1 = highInstruction1;
+				highWater1 = highInstruction;
 		}
 
-		private void setPotentialHighWater2(Instruction highInstruction2) {
+		private void setPotentialHighWater2(Instruction highInstruction) {
+			if (highInstruction == null)
+				return;
 			if (highWater2 == null
-					|| highInstruction2.getProgramOffset() > highWater2
+					|| highInstruction.getProgramOffset() > highWater2
 							.getProgramOffset())
-				highWater2 = highInstruction2;
+				highWater2 = highInstruction;
 		}
 
 		public Instruction getHighWater1() {
@@ -149,6 +153,8 @@ public final class Arena {
 			wonMoves += other.wonMoves;
 			lostMoves += other.lostMoves;
 			drawnMoves += other.drawnMoves;
+			setPotentialHighWater1(other.highWater1);
+			setPotentialHighWater2(other.highWater2);
 		}
 
 		@Override
