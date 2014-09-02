@@ -114,7 +114,7 @@ public final class Genetics {
 			addCheckingHistory(generation, grow(source, 2));
 			addCheckingHistory(generation, shrinkRandom(source, 1));
 			addCheckingHistory(generation, shrinkRandom(source, 2));
-			if (generation.size() > 0)
+			if (scoreGeneration.size() > 0)
 				addCheckingHistory(
 						generation,
 						breed(source,
