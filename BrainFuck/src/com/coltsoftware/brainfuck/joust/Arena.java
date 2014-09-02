@@ -159,8 +159,10 @@ public final class Arena {
 
 		@Override
 		public String toString() {
-			return String.format("%d/%d/%d %d/%d/%d", lengthsWon, lengthsLost,
-					lengthsDrawn, wonMoves, lostMoves, drawnMoves);
+			float pc = 100f * lengthsWon
+					/ (float) (lengthsWon + lengthsLost + lengthsDrawn);
+			return String.format("%.2f %% %d/%d/%d %d/%d/%d", pc, lengthsWon,
+					lengthsLost, lengthsDrawn, wonMoves, lostMoves, drawnMoves);
 		}
 
 	}
