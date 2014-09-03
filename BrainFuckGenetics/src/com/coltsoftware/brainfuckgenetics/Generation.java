@@ -168,6 +168,10 @@ public class Generation {
 	public int size() {
 		return programs.size() + existingGoodScores.size();
 	}
+	
+	public int newSize() {
+		return programs.size();
+	}
 
 	public void add(ProgramScore score) {
 		existingGoodScores.add(score);

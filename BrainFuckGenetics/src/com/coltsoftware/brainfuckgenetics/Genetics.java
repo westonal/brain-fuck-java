@@ -100,7 +100,7 @@ public final class Genetics {
 	private Generation createNextGeneration(List<ProgramScore> scoreGeneration,
 			int maxLength) {
 		Generation generation = new Generation(maxLength);
-		while (generation.size() < 40 && !scoreGeneration.isEmpty()) {
+		while (generation.newSize() < 100 && !scoreGeneration.isEmpty()) {
 			ProgramScore topScore = scoreGeneration.remove(0);
 			generation.add(topScore);
 
@@ -111,21 +111,26 @@ public final class Genetics {
 
 			source = source.substring(0, trimAt);
 
-			addCheckingHistory(generation, mutate(source));
-			addCheckingHistory(generation, mutate(source));
-			addCheckingHistory(generation, mutate(source));
-			addCheckingHistory(generation, grow(source, 1));
-			addCheckingHistory(generation, grow(source, 1));
-			addCheckingHistory(generation, grow(source, 2));
-			addCheckingHistory(generation, shrinkRandom(source, 1));
-			addCheckingHistory(generation, shrinkRandom(source, 2));
-			if (scoreGeneration.size() > 0)
-				addCheckingHistory(
-						generation,
-						breed(source,
-								scoreGeneration
-										.get(rand.nextInt(scoreGeneration
-												.size())).getProgram().source()));
+			int target = generation.newSize() + 9;
+
+			while (generation.newSize() < target) {				
+				addCheckingHistory(generation, mutate(source));
+				addCheckingHistory(generation, mutate(source));
+				addCheckingHistory(generation, mutate(source));
+				addCheckingHistory(generation, grow(source, 1));
+				addCheckingHistory(generation, grow(source, 1));
+				addCheckingHistory(generation, grow(source, 2));
+				addCheckingHistory(generation, shrinkRandom(source, 1));
+				addCheckingHistory(generation, shrinkRandom(source, 2));
+				if (scoreGeneration.size() > 0)
+					addCheckingHistory(
+							generation,
+							breed(source,
+									scoreGeneration
+											.get(rand.nextInt(scoreGeneration
+													.size())).getProgram()
+											.source()));
+			}
 		}
 		return generation;
 	}
