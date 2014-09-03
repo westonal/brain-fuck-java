@@ -23,12 +23,15 @@ public final class Genetics {
 		rand = new Random(435987);
 	}
 
+	private int generationNumber = 0;
+	private Generation firstGeneration;
+
 	public void go() {
 		out("GO");
-		Generation firstGeneration = createFirstGeneration();
-		setCurrentGeneration(firstGeneration);
 
-		int generationNumber = 0;
+		if (firstGeneration == null)
+			firstGeneration = createFirstGeneration();
+		setCurrentGeneration(firstGeneration);
 
 		while (true) {
 			out(String.format("Generation %d (%d)", generationNumber,
@@ -43,7 +46,10 @@ public final class Genetics {
 
 			writeToCache(scoreGeneration);
 
-			Generation next = createNextGeneration(scoreGeneration, 2048);
+			Generation next = generationNumber >= 12000
+					&& generationNumber % 1000 == 0 ? createNextSuperGeneration(
+					scoreGeneration, 2048) : createNextGeneration(
+					scoreGeneration, 2048);
 
 			setCurrentGeneration(next);
 			generationNumber++;
@@ -124,6 +130,42 @@ public final class Genetics {
 		return generation;
 	}
 
+	private Generation createNextSuperGeneration(
+			List<ProgramScore> scoreGeneration, int maxLength) {
+		Generation generation = new Generation(maxLength);
+
+		for (ProgramScore s : scoreGeneration)
+			generation.add(s);
+
+		while (generation.size() < 2000) {
+			ProgramScore topScore = scoreGeneration.get(rand
+					.nextInt(scoreGeneration.size()));
+			String source = topScore.getProgram().source();
+
+			int trimAt = topScore.getScore().getHighWater1()
+					.getProgramStringOffset();
+
+			source = source.substring(0, trimAt);
+
+			addCheckingHistory(generation, mutate(source));
+			addCheckingHistory(generation, mutate(source));
+			addCheckingHistory(generation, mutate(source));
+			addCheckingHistory(generation, grow(source, 1));
+			addCheckingHistory(generation, grow(source, 1));
+			addCheckingHistory(generation, grow(source, 2));
+			addCheckingHistory(generation, shrinkRandom(source, 1));
+			addCheckingHistory(generation, shrinkRandom(source, 2));
+			if (scoreGeneration.size() > 0)
+				addCheckingHistory(
+						generation,
+						breed(source,
+								scoreGeneration
+										.get(rand.nextInt(scoreGeneration
+												.size())).getProgram().source()));
+		}
+		return generation;
+	}
+
 	private String shrinkRandom(String source, int bitsToRemove) {
 		StringBuilder sb = new StringBuilder(source);
 		for (int i = 1; i < bitsToRemove; i++)
@@ -172,13 +214,21 @@ public final class Genetics {
 				toReplace2 = source.indexOf(']', toReplace);
 			}
 			if (c == ']') {
-				toReplace2 = source.indexOf('[');
+				toReplace2 = indexOfReverse(source, '[', toReplace);
 			}
 			charArray[toReplace] = randomCharater();
 			if (toReplace2 != -1)
 				charArray[toReplace2] = randomCharater();
 		}
 		return new String(charArray);
+	}
+
+	private static int indexOfReverse(String source, char c, int toReplace) {
+		char[] chars = source.toCharArray();
+		for (int i = toReplace; i >= 0; i--)
+			if (chars[i] == c)
+				return i;
+		return -1;
 	}
 
 	private String mutateAddLoop(String source) {
@@ -221,5 +271,10 @@ public final class Genetics {
 
 	private char randomCharater() {
 		return allChars[rand.nextInt(allChars.length)];
+	}
+
+	public void setFirstGen(Generation generation, int genNumber) {
+		firstGeneration = generation;
+		generationNumber = genNumber;
 	}
 }
