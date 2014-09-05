@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.coltsoftware.brainfuck.Program;
 
@@ -14,8 +16,14 @@ public final class Main {
 		Genetics genetics = new Genetics(bots);
 		if (args.length > 0)
 			genetics.setFirstGen(loadGeneration(args[0]),
-					Integer.parseInt(args[1]));
+					getGeneraionNumber(args[0]));
 		genetics.go();
+	}
+
+	private static int getGeneraionNumber(String string) {
+		Matcher matcher = Pattern.compile("\\d+").matcher(string);
+		matcher.find();
+		return Integer.parseInt(matcher.group());
 	}
 
 	private static Generation loadGeneration(String string) {
@@ -63,6 +71,7 @@ public final class Main {
 				bots.add(bot);
 			} catch (Exception ex) {
 				System.out.print("Failed to compile bot named " + botName);
+				ex.printStackTrace();
 				System.out.print("\n");
 			}
 		}
