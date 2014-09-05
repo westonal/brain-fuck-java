@@ -20,7 +20,7 @@ public final class Genetics {
 
 	public Genetics(List<Program> theEnvironment) {
 		this.theEnvironment = theEnvironment;
-		rand = new Random(435987);
+		rand = new Random(4291);
 	}
 
 	private int generationNumber = 0;
@@ -41,7 +41,7 @@ public final class Genetics {
 					.scoreGeneration(theEnvironment);
 			out(String.format("Generation %d took %d ms", generationNumber,
 					System.currentTimeMillis() - time));
-			if (generationNumber % 100 == 0)
+			if (generationNumber % 200 == 0)
 				saveGeneration(scoreGeneration, generationNumber);
 
 			writeToCache(scoreGeneration);
@@ -232,9 +232,9 @@ public final class Genetics {
 	}
 
 	private String mutateAddLoop(String source) {
-		if (rand.nextInt(20) == 0) {
-			return mutateAddLoop(source);
-		}
+		if (source.length() <= 2)
+			return source + getRandomLoop();
+
 		StringBuilder sb = new StringBuilder(source);
 		sb.insert(rand.nextInt(source.length() - 1), getRandomLoop());
 		return sb.toString();
