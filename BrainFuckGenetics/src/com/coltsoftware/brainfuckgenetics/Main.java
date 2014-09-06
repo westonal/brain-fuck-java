@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,17 +12,43 @@ import com.coltsoftware.brainfuck.Program;
 
 public final class Main {
 
+	private final static Random rand = new Random(9541);
+
 	public static void main(String[] args) {
 		List<Program> bots = loadBots();
-		Genetics genetics = new Genetics(bots);
-		if (args.length > 0)
+
+		if (args.length > 0) {
+			Genetics genetics = new Genetics(4291, bots);
 			genetics.setFirstGen(loadGeneration(args[0]),
-					getGeneraionNumber(args[0]));
-		genetics.go();
+					getGenerationNumber(args[0]));
+			genetics.go();
+		} else {
+			List<Genetics> populations = createPopulations(bots, 20);
+			int size = populations.size();
+			while (true) {
+				for (int i = 0; i < size; i++) {
+					final Genetics population = populations.get(i);
+					population.goOne(populations.get(
+							rand.nextInt(populations.size())).randomProgram(
+							rand));
+				}
+				System.out.print("");
+			}
+		}
 	}
 
-	private static int getGeneraionNumber(String string) {
-		Matcher matcher = Pattern.compile("\\d+").matcher(string);
+	private static List<Genetics> createPopulations(List<Program> bots, int n) {
+		ArrayList<Genetics> arrayList = new ArrayList<Genetics>();
+		arrayList.add(new Genetics(4291, bots));
+		for (int i = 1; i < n; i++) {
+			int seed = i * 100;
+			arrayList.add(new Genetics(seed, bots));
+		}
+		return arrayList;
+	}
+
+	private static int getGenerationNumber(String string) {
+		Matcher matcher = Pattern.compile("(\\d+)(?!.*\\d)").matcher(string);
 		matcher.find();
 		return Integer.parseInt(matcher.group());
 	}

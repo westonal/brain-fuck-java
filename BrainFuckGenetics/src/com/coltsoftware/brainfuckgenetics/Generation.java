@@ -173,4 +173,15 @@ public class Generation {
 		existingGoodScores.add(score);
 	}
 
+	public String getProgram(int n) {
+		try {
+			if (n < programs.size())
+				return programs.toArray(new String[programs.size()])[n];
+			return existingGoodScores.get(n - programs.size()).getProgram()
+					.source();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
 }

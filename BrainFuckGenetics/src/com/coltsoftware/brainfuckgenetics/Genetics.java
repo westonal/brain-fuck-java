@@ -13,14 +13,20 @@ import com.coltsoftware.brainfuck.Program;
 
 public final class Genetics {
 
+	private final String name;
 	private final Random rand;
 	private Generation generation;
 	private final List<Program> theEnvironment;
 	private final AttemptCache cache = new AttemptCache();
 
-	public Genetics(List<Program> theEnvironment) {
+	public Genetics(String name, int seed, List<Program> theEnvironment) {
+		this.name = name;
 		this.theEnvironment = theEnvironment;
-		rand = new Random(4291);
+		rand = new Random(seed);
+	}
+
+	public Genetics(int seed, List<Program> theEnvironment) {
+		this(String.format("Seed%d", seed), seed, theEnvironment);
 	}
 
 	private int generationNumber = 0;
@@ -29,31 +35,36 @@ public final class Genetics {
 	public void go() {
 		out("GO");
 
-		if (firstGeneration == null)
-			firstGeneration = createFirstGeneration();
 		setCurrentGeneration(firstGeneration);
 
-		while (true) {
-			out(String.format("Generation %d (%d)", generationNumber,
-					generation.size()));
-			long time = System.currentTimeMillis();
-			List<ProgramScore> scoreGeneration = generation
-					.scoreGeneration(theEnvironment);
-			out(String.format("Generation %d took %d ms", generationNumber,
-					System.currentTimeMillis() - time));
-			if (generationNumber % 200 == 0)
-				saveGeneration(scoreGeneration, generationNumber);
+		while (true)
+			goOne(null);
+	}
 
-			writeToCache(scoreGeneration);
-
-			Generation next = generationNumber >= 12000
-					&& generationNumber % 1000 == 0 ? createNextSuperGeneration(
-					scoreGeneration, 2048) : createNextGeneration(
-					scoreGeneration, 2048);
-
-			setCurrentGeneration(next);
-			generationNumber++;
+	public void goOne(String additional) {
+		if (firstGeneration == null) {
+			firstGeneration = createFirstGeneration();
+			setCurrentGeneration(firstGeneration);
 		}
+		out(String.format("%s Generation %d (%d)", name, generationNumber,
+				generation.size()));
+		long time = System.currentTimeMillis();
+		List<ProgramScore> scoreGeneration = generation
+				.scoreGeneration(theEnvironment);
+		out(String.format("Generation %d took %d ms", generationNumber,
+				System.currentTimeMillis() - time));
+		if (generationNumber % 200 == 0)
+			saveGeneration(scoreGeneration, generationNumber);
+
+		writeToCache(scoreGeneration);
+
+		Generation next = generationNumber >= 12000
+				&& generationNumber % 1000 == 0 ? createNextSuperGeneration(
+				scoreGeneration, 2048) : createNextGeneration(scoreGeneration,
+				additional, 2048);
+
+		setCurrentGeneration(next);
+		generationNumber++;
 	}
 
 	private void writeToCache(List<ProgramScore> scoreGeneration) {
@@ -61,14 +72,14 @@ public final class Genetics {
 			cache.saveScore(score);
 	}
 
-	private static void saveGeneration(List<ProgramScore> scoreGeneration,
+	private void saveGeneration(List<ProgramScore> scoreGeneration,
 			int generationNumber) {
 		try {
 			File logs = new File("logs");
 			if (!logs.exists())
 				logs.mkdir();
-			File outFile = new File(logs, String.format("Generation%d.txt",
-					generationNumber));
+			File outFile = new File(logs, String.format("%sGeneration%d.txt",
+					name, generationNumber));
 			FileOutputStream fileOutputStream = new FileOutputStream(outFile,
 					false);
 			PrintStream printStream = new PrintStream(fileOutputStream, true,
@@ -96,7 +107,7 @@ public final class Genetics {
 	}
 
 	private Generation createNextGeneration(List<ProgramScore> scoreGeneration,
-			int maxLength) {
+			String additional, int maxLength) {
 		Generation generation = new Generation(maxLength);
 		while (generation.size() < 40 && !scoreGeneration.isEmpty()) {
 			ProgramScore topScore = scoreGeneration.remove(0);
@@ -124,6 +135,8 @@ public final class Genetics {
 								scoreGeneration
 										.get(rand.nextInt(scoreGeneration
 												.size())).getProgram().source()));
+			if (additional != null)
+				addCheckingHistory(generation, breed(source, additional));
 		}
 		return generation;
 	}
@@ -191,6 +204,10 @@ public final class Genetics {
 	private String breed(String source1, String source2) {
 		if (source2.length() == 0)
 			throw new RuntimeException();
+		if (source2.length() < 2)
+			return source1;
+		if (source1.length() < 2)
+			return source2;
 		int placeToChop1 = rand.nextInt(source1.length()) + 1;
 		int placeToChop2 = rand.nextInt(source2.length() - 1);
 		return source1.substring(0, placeToChop1)
@@ -274,5 +291,11 @@ public final class Genetics {
 	public void setFirstGen(Generation generation, int genNumber) {
 		firstGeneration = generation;
 		generationNumber = genNumber;
+	}
+
+	public String randomProgram(Random rand) {
+		if (generation != null)
+			return generation.getProgram(rand.nextInt(generation.size()));
+		return null;
 	}
 }
