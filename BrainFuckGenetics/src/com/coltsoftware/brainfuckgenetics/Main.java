@@ -62,11 +62,11 @@ public final class Main {
 
 	private static List<Program> loadBots() {
 		ArrayList<Program> bots = new ArrayList<Program>();
-		for (String botName : AssetLoader.listBots()) {
+		for (String botName : BotFileLoader.listBots()) {
 			System.out.print(botName);
 			System.out.print("\n");
 			try {
-				Program bot = Program.compile(AssetLoader
+				Program bot = Program.compile(BotFileLoader
 						.loadBotString(botName));
 				bots.add(bot);
 			} catch (Exception ex) {
