@@ -47,14 +47,14 @@ public final class BotFileLoader {
 		return allstrings.toString();
 	}
 
-	public List<Program> loadBots() {
-		ArrayList<Program> bots = new ArrayList<Program>();
+	public List<Bot> loadBots() {
+		ArrayList<Bot> bots = new ArrayList<Bot>();
 		for (String botName : listBots()) {
 			System.out.print(botName);
 			System.out.print("\n");
 			try {
 				Program bot = Program.compile(loadBotString(botName));
-				bots.add(bot);
+				bots.add(new Bot(bot, botName.replace(".bf", "")));
 			} catch (Exception ex) {
 				System.out.print("Failed to compile bot named " + botName);
 				ex.printStackTrace();
@@ -62,5 +62,13 @@ public final class BotFileLoader {
 			}
 		}
 		return bots;
+	}
+
+	public List<Program> loadBotsPrograms() {
+		List<Bot> bots = loadBots();
+		List<Program> programs = new ArrayList<Program>();
+		for (Bot b : bots)
+			programs.add(b.getProgram());
+		return programs;
 	}
 }

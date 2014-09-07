@@ -16,7 +16,7 @@ public final class Main {
 	private final static Random rand = new Random(9541);
 
 	public static void main(String[] args) {
-		List<Program> bots = new BotFileLoader("bots").loadBots();
+		List<Program> bots = new BotFileLoader("bots").loadBotsPrograms();
 
 		if (args.length > 0) {
 			Genetics genetics = new Genetics(4291, bots);
