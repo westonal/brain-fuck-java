@@ -9,13 +9,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.coltsoftware.brainfuck.Program;
+import com.coltsoftware.brainfuck.joust.BotFileLoader;
 
 public final class Main {
 
 	private final static Random rand = new Random(9541);
 
 	public static void main(String[] args) {
-		List<Program> bots = loadBots();
+		List<Program> bots = new BotFileLoader("bots").loadBots();
 
 		if (args.length > 0) {
 			Genetics genetics = new Genetics(4291, bots);
@@ -85,24 +86,6 @@ public final class Main {
 			throw new RuntimeException(e);
 		}
 		return allstrings;
-	}
-
-	private static List<Program> loadBots() {
-		ArrayList<Program> bots = new ArrayList<Program>();
-		for (String botName : BotFileLoader.listBots()) {
-			System.out.print(botName);
-			System.out.print("\n");
-			try {
-				Program bot = Program.compile(BotFileLoader
-						.loadBotString(botName));
-				bots.add(bot);
-			} catch (Exception ex) {
-				System.out.print("Failed to compile bot named " + botName);
-				ex.printStackTrace();
-				System.out.print("\n");
-			}
-		}
-		return bots;
 	}
 
 }
