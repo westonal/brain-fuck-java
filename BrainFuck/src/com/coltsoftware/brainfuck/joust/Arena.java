@@ -274,8 +274,19 @@ public final class Arena {
 			}
 		}
 		out("Draw:\n");
-		return new JoustResult(0, moves, engine1.getHighestInstruction(),
-				engine2.getHighestInstruction());
+		int distanceToZero1 = Math.abs((int) tape.getAt(0));
+		int distanceToZero2 = Math.abs((int) tape.getAt(tape.length() - 1));
+		if (distanceToZero1 == distanceToZero2) {
+			return new JoustResult(0, moves, engine1.getHighestInstruction(),
+					engine2.getHighestInstruction());
+		}
+		if (distanceToZero1 > distanceToZero2) {
+			return new JoustResult(1, moves, engine1.getHighestInstruction(),
+					engine2.getHighestInstruction());
+		} else {
+			return new JoustResult(-1, moves, engine1.getHighestInstruction(),
+					engine2.getHighestInstruction());
+		}
 	}
 
 	private static void out(String string) {

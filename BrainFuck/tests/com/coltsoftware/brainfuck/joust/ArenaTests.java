@@ -30,7 +30,7 @@ public final class ArenaTests {
 	@Test
 	public void only_plays_number_of_moves_given_resulting_in_draw() {
 		Arena arena = new Arena.Builder().tapeLength(10)
-				.programStrings("(>)*9[-]", "+[]").build();
+				.programStrings("+(>)*9[-]", "+[]").build();
 		JoustResult joust = arena.joust(10);
 		assertEquals(0, joust.getWinner());
 		assertEquals(10, joust.getMoves());
@@ -39,7 +39,7 @@ public final class ArenaTests {
 	@Test
 	public void no_double_joust() {
 		Arena arena = new Arena.Builder().tapeLength(10)
-				.programStrings("(>)*9[-]", "+[]").build();
+				.programStrings("+(>)*9[-]", "+[]").build();
 		JoustResult joust = arena.joust(10);
 		assertEquals(0, joust.getWinner());
 		assertEquals(10, joust.getMoves());
@@ -61,5 +61,32 @@ public final class ArenaTests {
 				"+[.]", ">+[-]<<[.]").allLengthScore();
 		assertEquals(3, allLengthScore.getHighWater1().getProgramOffset());
 		assertEquals(6, allLengthScore.getHighWater2().getProgramOffset());
+	}
+
+	@Test
+	public void end_of_moves_draw_1() {
+		Arena arena = new Arena.Builder().tapeLength(10)
+				.programStrings("[.]", "-[.]").build();
+		JoustResult joust = arena.joust(10);
+		assertEquals(1, joust.getWinner());
+		assertEquals(10, joust.getMoves());
+	}
+
+	@Test
+	public void end_of_moves_draw_2() {
+		Arena arena = new Arena.Builder().tapeLength(10)
+				.programStrings("-[.]", "[.]").build();
+		JoustResult joust = arena.joust(10);
+		assertEquals(-1, joust.getWinner());
+		assertEquals(10, joust.getMoves());
+	}
+
+	@Test
+	public void end_of_moves_draw() {
+		Arena arena = new Arena.Builder().tapeLength(10)
+				.programStrings("-[.]", "-[.]").build();
+		JoustResult joust = arena.joust(10);
+		assertEquals(0, joust.getWinner());
+		assertEquals(10, joust.getMoves());
 	}
 }
