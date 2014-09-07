@@ -115,6 +115,9 @@ public final class Genetics {
 
 			String source = topScore.getProgram().source();
 
+			if (topScore.getScore().getHighWater1() == null)
+				continue;
+
 			int trimAt = topScore.getScore().getHighWater1()
 					.getProgramStringOffset();
 
@@ -133,8 +136,8 @@ public final class Genetics {
 						generation,
 						breed(source,
 								scoreGeneration
-										.get(rand.nextInt(scoreGeneration
-												.size())).getProgram().source()));
+										.get(safeRand(scoreGeneration.size()))
+										.getProgram().source()));
 			if (additional != null)
 				addCheckingHistory(generation, breed(source, additional));
 		}
@@ -171,16 +174,19 @@ public final class Genetics {
 						generation,
 						breed(source,
 								scoreGeneration
-										.get(rand.nextInt(scoreGeneration
-												.size())).getProgram().source()));
+										.get(safeRand(scoreGeneration.size()))
+										.getProgram().source()));
 		}
 		return generation;
 	}
 
 	private String shrinkRandom(String source, int bitsToRemove) {
 		StringBuilder sb = new StringBuilder(source);
-		for (int i = 1; i < bitsToRemove; i++)
-			sb.deleteCharAt(rand.nextInt(sb.length()));
+		for (int i = 1; i < bitsToRemove; i++) {
+			if (sb.length() == 0)
+				break;
+			sb.deleteCharAt(safeRand(sb.length()));
+		}
 		return sb.toString();
 	}
 
@@ -197,8 +203,14 @@ public final class Genetics {
 	private String grow(String source, int bitsToInsert) {
 		StringBuilder sb = new StringBuilder(source);
 		for (int i = 1; i < bitsToInsert; i++)
-			sb.insert(rand.nextInt(sb.length()), randomCharater());
+			sb.insert(safeRand(sb.length()), randomCharater());
 		return sb.toString();
+	}
+
+	private int safeRand(int nonInclusiveMax) {
+		if (nonInclusiveMax == 0)
+			return 0;
+		return rand.nextInt(nonInclusiveMax);
 	}
 
 	private String breed(String source1, String source2) {
@@ -208,22 +220,22 @@ public final class Genetics {
 			return source1;
 		if (source1.length() < 2)
 			return source2;
-		int placeToChop1 = rand.nextInt(source1.length()) + 1;
-		int placeToChop2 = rand.nextInt(source2.length() - 1);
+		int placeToChop1 = safeRand(source1.length()) + 1;
+		int placeToChop2 = safeRand(source2.length() - 1);
 		return source1.substring(0, placeToChop1)
 				+ source2.substring(placeToChop2);
 	}
 
 	private String mutate(String source) {
-		if (rand.nextInt(10) == 0) {
+		if (safeRand(10) == 0 || source.length() < 2) {
 			return mutateAddLoop(source);
 		}
 
-		int bitsToMutate = rand.nextInt(5);
+		int bitsToMutate = safeRand(5);
 		char[] charArray = source.toCharArray();
 		for (int i = 1; i < bitsToMutate; i++) {
 			int toReplace2 = -1;
-			int toReplace = rand.nextInt(charArray.length);
+			int toReplace = safeRand(charArray.length);
 			char c = charArray[toReplace];
 			if (c == '[') {
 				toReplace2 = source.indexOf(']', toReplace);
@@ -251,14 +263,14 @@ public final class Genetics {
 			return source + getRandomLoop();
 
 		StringBuilder sb = new StringBuilder(source);
-		sb.insert(rand.nextInt(source.length() - 1), getRandomLoop());
+		sb.insert(safeRand(source.length() - 1), getRandomLoop());
 		return sb.toString();
 	}
 
 	private String[] allLoops = new String[] { "[-]", "[+]" };
 
 	private String getRandomLoop() {
-		return allLoops[rand.nextInt(allLoops.length)];
+		return allLoops[safeRand(allLoops.length)];
 	}
 
 	private void setCurrentGeneration(Generation generation) {
@@ -285,7 +297,7 @@ public final class Genetics {
 	private char[] allChars = new char[] { '>', '<', '+', '-' };
 
 	private char randomCharater() {
-		return allChars[rand.nextInt(allChars.length)];
+		return allChars[safeRand(allChars.length)];
 	}
 
 	public void setFirstGen(Generation generation, int genNumber) {
@@ -295,7 +307,7 @@ public final class Genetics {
 
 	public String randomProgram(Random rand) {
 		if (generation != null)
-			return generation.getProgram(rand.nextInt(generation.size()));
+			return generation.getProgram(safeRand(generation.size()));
 		return null;
 	}
 }

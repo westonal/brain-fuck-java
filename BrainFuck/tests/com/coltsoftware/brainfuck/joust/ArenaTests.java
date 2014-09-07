@@ -89,4 +89,43 @@ public final class ArenaTests {
 		assertEquals(0, joust.getWinner());
 		assertEquals(10, joust.getMoves());
 	}
+
+	@Test
+	public void immediate_fail() {
+		Arena arena = new Arena.Builder()
+				.tapeLength(10)
+				.programStrings("<-++-<><>>", ">>(+)*128<(+)*128(>)*8([-]>)*21")
+				.build();
+		JoustResult joust = arena.joust(10);
+		assertEquals(-1, joust.getWinner());
+		assertEquals(1, joust.getMoves());
+		assertNotNull(joust.getP1HighInstruction());
+		assertNotNull(joust.getP2HighInstruction());
+	}
+
+	@Test
+	public void all_lengths_score() {
+		AllLengthScore allLengthScore = new Arena.Builder()
+				.tapeLength(10)
+				.programStrings("<-++-<><>>", ">>(+)*128<(+)*128(>)*8([-]>)*21")
+				.allLengthScore();
+		assertNotNull(allLengthScore.getHighWater1());
+		assertNotNull(allLengthScore.getHighWater2());
+	}
+
+	@Test
+	public void all_lengths_score_empty_first_program() {
+		AllLengthScore allLengthScore = new Arena.Builder().tapeLength(10)
+				.programStrings("", "[.]").allLengthScore();
+		assertNull(allLengthScore.getHighWater1());
+		assertNotNull(allLengthScore.getHighWater2());
+	}
+
+	@Test
+	public void all_lengths_score_empty_second_program() {
+		AllLengthScore allLengthScore = new Arena.Builder().tapeLength(10)
+				.programStrings("[.]", "").allLengthScore();
+		assertNotNull(allLengthScore.getHighWater1());
+		assertNull(allLengthScore.getHighWater2());
+	}
 }
