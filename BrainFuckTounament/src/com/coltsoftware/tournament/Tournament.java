@@ -48,6 +48,7 @@ public class Tournament {
 	public void run() {
 		createHashMap();
 		int size = bots.size();
+		outln(String.format("%d bots to battle", size));
 		for (int a = 0; a < size - 1; a++)
 			for (int b = a + 1; b < size; b++) {
 				Bot bota = bots.get(a);
@@ -56,6 +57,8 @@ public class Tournament {
 						botb.getName()));
 				outln(vs(bota, botb));
 			}
+		outln("");
+		outln("----Scores----");
 		List<Score> sortedScores = sortScores();
 		printScores(sortedScores);
 	}
