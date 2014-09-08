@@ -24,4 +24,4 @@
   --                                          set to minus two 
  ]                                            while true end
  -                                           decrease and loop
-)*5                                          In case of clash or initial column minus seven is zero
+)*5
