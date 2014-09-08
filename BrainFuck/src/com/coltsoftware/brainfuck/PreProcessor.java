@@ -7,87 +7,90 @@ public final class PreProcessor {
 	private String string;
 
 	public PreProcessor(String string) {
-		this.string = string;
-		while (containsFirst10K('(') || containsFirst10K(')')
-				|| containsFirst10K('*')) {
-			String newString = process();
-			this.string = newString;
-		}
-	}
-
-	private boolean containsFirst10K(char c) {
-		int indexOf = this.string.indexOf(c);
-		return indexOf >= 0 && indexOf <= 10000;
+		this.string = process(string);
 	}
 
 	public String getResult() {
 		return string;
 	}
 
-	private String process() {
-		StringBuilder sb = new StringBuilder(string);
+	private static String process(String string) {
+		char[] charArray = string.toCharArray();
 
-		Stack<Integer> stack = new Stack<Integer>();
-
-		String repeatText = null;
-		int i = 0;
-		while (i < sb.length()) {
-			char c = sb.charAt(i);
-			switch (c) {
-			case '(': {
-				sb.replace(i, i + 1, " ");
-				stack.push(i);
-				break;
-			}
-			case ')': {
-				sb.replace(i, i + 1, " ");
-				if (stack.isEmpty())
-					throw new MismatchedBracketsException();
-				repeatText = sb.substring(stack.pop() + 1, i);
-				break;
-			}
-			case '*': {
-				sb.replace(i, i + 1, " ");
-				if (repeatText == null)
-					throw new PreProcessorException();
-				int repeats = getNumber(sb, i + 1);
-				if (repeats <= 0)
-					throw new PreProcessorException();
-				for (int r = 1; r < repeats; r++)
-					sb.insert(i, repeatText);
-				break;
-			}
-			default:
-				repeatText = null;
-				if (c >= '0' && c <= '9')
-					sb.replace(i, i + 1, " ");
-				break;
-			}
-			i++;
-			if (i > 10000)
-				break;
+		Stack<Character> stack = new Stack<Character>();
+		for (int i = charArray.length - 1; i >= 0; i--) {
+			char c = charArray[i];
+			stack.push(c);
 		}
 
-		i = 0;
-		while (i < sb.length()) {
-			if (sb.charAt(i) == ' ')
-				sb.deleteCharAt(i);
-			else
-				i++;
+		return processStack(stack);
+	}
+
+	private static String processStack(Stack<Character> stack) {
+		StringBuilder sb = new StringBuilder();
+		while (!stack.isEmpty()) {
+			char c = stack.pop();
+			switch (c) {
+			case '(':
+				processAfterOpenBracket(stack, sb);
+				break;
+			case ')':
+				throw new MismatchedBracketsException();
+			default:
+				sb.append(c);
+				break;
+			}
 		}
 
 		return sb.toString();
 	}
 
-	private static int getNumber(StringBuilder sb, int startAt) {
+	private static void processAfterOpenBracket(Stack<Character> stack,
+			StringBuilder sb) {
+		String copyText = getCopyText(stack);
+		readStar(stack);
+		int n = readNumber(stack);
+		if (n == 0)
+			throw new PreProcessorException();
+		for (int i = 0; i < n; i++)
+			sb.append(copyText);
+	}
+
+	private static int readNumber(Stack<Character> stack) {
 		int value = 0;
-		for (int i = startAt; i < sb.length(); i++) {
-			char c = sb.charAt(i);
-			if (c >= '0' && c <= '9')
-				value = value * 10 + (c - '0');
-			else
-				break;
+		while (!stack.isEmpty()) {
+			char peek = stack.peek();
+			if (peek >= '0' && peek <= '9') {
+				value = value * 10 + (peek - '0');
+				stack.pop();
+				continue;
+			}
+			break;
 		}
 		return value;
+	}
+
+	private static void readStar(Stack<Character> stack) {
+		if (stack.pop() != '*')
+			throw new PreProcessorException();
+	}
+
+	private static String getCopyText(Stack<Character> stack) {
+		StringBuilder sb = new StringBuilder();
+		boolean closed = false;
+		while (!stack.isEmpty()) {
+			char c = stack.pop();
+			if (c == ')') {
+				closed = true;
+				break;
+			}
+			if (c == '(') {
+				processAfterOpenBracket(stack, sb);
+			} else
+				sb.append(c);
+		}
+		if (!closed)
+			throw new MismatchedBracketsException();
+		return sb.toString();
 	}
 }

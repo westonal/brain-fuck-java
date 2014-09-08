@@ -51,4 +51,11 @@ public class FullJoustLoadingTests extends JoustTestsBase {
 			assertNotNull(Program.compile(loadBotString(bot)));
 		}
 	}
+
+	@Test
+	public void can_preprocess_nestdarwin() {
+		assertNotNull(new PreProcessor(loadBotString("NestDarwin.bf"))
+				.getResult());
+	}
+
 }

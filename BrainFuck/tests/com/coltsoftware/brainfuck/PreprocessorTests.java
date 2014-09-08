@@ -18,15 +18,21 @@ public final class PreprocessorTests {
 	}
 
 	@Test
-	public void single_digit_repeat() {
-		Program compiled = Program.compile("(+)*4");
-		assertEquals(4, compiled.length());
+	public void single_digit_no_repeat() {
+		String preprocessed = new PreProcessor("(+)*1").getResult();
+		assertEquals("+", preprocessed);
 	}
 
 	@Test
 	public void double_digit_repeat() {
-		Program compiled = Program.compile("(+)*15");
-		assertEquals(15, compiled.length());
+		String preprocessed = new PreProcessor("(+)*12").getResult();
+		assertEquals("++++++++++++", preprocessed);
+	}
+
+	@Test
+	public void single_digit_repeat() {
+		Program compiled = Program.compile("(+)*4");
+		assertEquals(4, compiled.length());
 	}
 
 	@Test
@@ -40,7 +46,7 @@ public final class PreprocessorTests {
 		Program.compile("++)*23");
 	}
 
-	@Test(expected = PreProcessorException.class)
+	@Test(expected = MismatchedBracketsException.class)
 	public void bad_brackets_2() {
 		Program.compile("(++*23");
 	}
@@ -53,6 +59,11 @@ public final class PreprocessorTests {
 	@Test(expected = PreProcessorException.class)
 	public void symbol_after_times() {
 		Program.compile("(++)*+23");
+	}
+
+	@Test(expected = PreProcessorException.class)
+	public void no_times() {
+		Program.compile("(++)23");
 	}
 
 	@Test
