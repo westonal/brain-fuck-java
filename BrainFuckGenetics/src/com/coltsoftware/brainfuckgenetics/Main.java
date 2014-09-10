@@ -24,7 +24,7 @@ public final class Main {
 					getGenerationNumber(args[0]));
 			genetics.go();
 		} else {
-			List<Genetics> populations = createPopulations(bots, 20);
+			List<Genetics> populations = createPopulations(bots, 30);
 			int size = populations.size();
 			while (true) {
 				for (int i = 0; i < size; i++) {
